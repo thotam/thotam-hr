@@ -15,7 +15,7 @@ class AddHrColumnsToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('hr_key', 10)->nullable()->default(null)->after('password');
-            $table->foreign('hr_key')->references('key')->on('user_infos')->onDelete('SET NULL')->onUpdate('cascade');
+            $table->foreign('hr_key')->references('key')->on('hrs')->onDelete('SET NULL')->onUpdate('cascade');
         });
     }
 
