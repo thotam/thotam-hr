@@ -17,13 +17,15 @@ composer require thotam/thotam-hr
 
 ## Usage
 
-``` php
-// Usage description here
+#### Add CheckAccount Middleware
+
+```php
+Add Thotam\ThotamHr\Http\Middleware\CheckAccount::Class To App\Http\Kernel.php in $routeMiddleware
 ```
 
 ### Testing
 
-``` bash
+```bash
 composer test
 ```
 
@@ -41,8 +43,8 @@ If you discover any security related issues, please email thanhtamtqno1@gmail.co
 
 ## Credits
 
-- [thotam](https://github.com/thotam)
-- [All Contributors](../../contributors)
+-   [thotam](https://github.com/thotam)
+-   [All Contributors](../../contributors)
 
 ## License
 
