@@ -4,21 +4,16 @@ namespace Thotam\ThotamHr\Models;
 
 use App\Models\User;
 use Wildside\Userstamps\Userstamps;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class HR extends Model implements AuthorizableContract
+class HR extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use Userstamps;
-    use HasRoles;
-    use Authorizable;
 
     /**
      * The attributes that are mass assignable.
