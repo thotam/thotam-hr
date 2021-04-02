@@ -58,6 +58,13 @@ class HR extends Model implements AuthorizableContract
     protected $keyType = 'string';
 
     /**
+     * guard_name
+     *
+     * @var string
+     */
+    protected $guard_name = 'web';
+
+    /**
      * Get all of the users for the HR
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
