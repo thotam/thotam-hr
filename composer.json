@@ -32,7 +32,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Thotam\\ThotamHr\\Tests\\": "tests"
+            "Thotam\\ThotamHr\\Tests\\": "tests",
+            "Thotam\\ThotamHr\\Database\\Seeders\\": "database/seeders"
         }
     },
     "scripts": {
