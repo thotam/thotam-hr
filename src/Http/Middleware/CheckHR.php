@@ -26,14 +26,14 @@ class CheckHR
                 ]);
         } elseif (optional(Auth::user()->hr)->active===0) {
             return response()->view('errors.dynamic',[
-                'title' => 'Tài khoản đã bị vô hiệu hóa',
+                'title' => 'Hồ sơ đã bị vô hiệu hóa',
                 'error_code' => '403',
                 'error_description' => 'Không có quyền truy cập',
                 'text_xlarge' => 'Vui lòng liên hệ phòng truyền thông để được trợ giúp',
                 ]);
         } elseif (!!!optional(Auth::user()->hr)->active) {
             return response()->view('errors.dynamic',[
-                'title' => 'Tài khoản chưa được kích hoạt',
+                'title' => 'Hồ sơ chưa được kích hoạt',
                 'error_code' => '403',
                 'error_description' => 'Không có quyền truy cập',
                 'text_xlarge' => 'Vui lòng liên hệ phòng truyền thông để được trợ giúp',
