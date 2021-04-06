@@ -27,13 +27,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Thotam\\ThotamHr\\": "src"
+            "Thotam\\ThotamHr\\": "src",
+            "Thotam\\ThotamHr\\Database\\Seeders\\": "database/seeders"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Thotam\\ThotamHr\\Tests\\": "tests",
-            "Thotam\\ThotamHr\\Database\\Seeders\\": "database/seeders"
+            "Thotam\\ThotamHr\\Tests\\": "tests"
         }
     },
     "scripts": {
