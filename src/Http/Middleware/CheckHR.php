@@ -6,7 +6,7 @@ use Auth;
 use Closure;
 use Illuminate\Http\Request;
 
-class CheckAccount
+class CheckHR
 {
     /**
      * Handle an incoming request.

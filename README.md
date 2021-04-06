@@ -17,10 +17,10 @@ composer require thotam/thotam-hr
 
 ## Usage
 
-#### Add CheckAccount Middleware
+#### Add CheckHR Middleware
 
 ```php
-Add Thotam\ThotamHr\Http\Middleware\CheckAccount::Class To App\Http\Kernel.php in $routeMiddleware
+Add Thotam\ThotamHr\Http\Middleware\CheckHR::Class To App\Http\Kernel.php in $routeMiddleware
 ```
 
 ### Testing
