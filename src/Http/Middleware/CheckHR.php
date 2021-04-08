@@ -18,7 +18,7 @@ class CheckHR
     public function handle(Request $request, Closure $next)
     {
         if (!!!Auth::user()->hr) {
-            return response()->view('auth.update-info',[
+            return response()->view('thotam-hr::auth.update-info',[
                 'title' => 'Đã có lỗi sảy ra...',
                 'error_code' => '403',
                 'error_description' => 'Không có quyền truy cập',
