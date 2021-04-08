@@ -33,7 +33,25 @@ class AdminHrDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', 'hr.action')
+            ->addColumn('action', function ($query) {
+                $Action_Icon="<div class='action-div icon-4 px-0 mx-1 d-flex justify-content-around text-center'>";
+
+                if ($this->hr->can("edit-user")) {
+                    $Action_Icon.="<div class='col action-icon-w-50 action-icon' thotam-livewire-method='edit_user' thotam-model-id='$query->id'><i class='text-twitter fas fa-user-edit'></i></div>";
+                }
+
+                if ($this->hr->can("link-user")) {
+                    $Action_Icon.="<div class='col action-icon-w-50 action-icon' thotam-livewire-method='link_user' thotam-model-id='$query->id'><i class='text-success fas fa-link'></i></div>";
+                }
+
+                if ($this->hr->can("reset-password-user")) {
+                    $Action_Icon.="<div class='col action-icon-w-50 action-icon' thotam-livewire-method='reset_password' thotam-model-id='$query->id'><i class='text-linux fas fa-user-lock'></i></div>";
+                }
+
+                $Action_Icon.="</div>";
+
+                return $Action_Icon;
+            })
             ->editColumn('active', function ($query) {
                 if ($query->active === NULL) {
                     return "Chưa kích hoạt";
