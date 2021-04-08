@@ -65,6 +65,16 @@ class HR extends Model implements AuthorizableContract
     protected $guard_name = 'web';
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'ngaysinh' => 'datetime',
+        'ngaythuviec' => 'datetime',
+    ];
+
+    /**
      * Get all of the users for the HR
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

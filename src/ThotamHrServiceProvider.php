@@ -2,7 +2,9 @@
 
 namespace Thotam\ThotamHr;
 
+use Livewire\Livewire;
 use Illuminate\Support\ServiceProvider;
+use Thotam\ThotamHr\Http\Livewire\UpdateHrLivewire;
 
 class ThotamHrServiceProvider extends ServiceProvider
 {
@@ -63,5 +65,9 @@ class ThotamHrServiceProvider extends ServiceProvider
         $this->app->singleton('thotam-hr', function () {
             return new ThotamHr;
         });
+
+        if (class_exists(Livewire::class)) {
+            Livewire::component('thotam-hr::update-hr-livewire', UpdateHrLivewire::class);
+        }
     }
 }
