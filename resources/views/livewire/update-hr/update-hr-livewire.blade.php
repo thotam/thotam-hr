@@ -1,8 +1,8 @@
 <div>
     @if (!!$update_hr)
-        <p class="text-big">Vì thông tin bạn cung cấp chưa chính xác nên hệ thống không thể tự động cấp quyền cho bạn, vui lòng cập nhật thông tin hoặc chở xử lý bằng tay</b></p>
+        <p class="text-big text-indigo">Vì thông tin bạn cung cấp chưa chính xác nên hệ thống không thể tự động cấp quyền cho bạn, vui lòng cập nhật thông tin hoặc chở xử lý bằng tay</b></p>
     @else
-        <p class="text-big">Vui lòng cung cấp thông tin để được hỗ trợ.</p>
+        <p class="text-big text-indigo">Vui lòng cung cấp thông tin để được hỗ trợ.</p>
     @endif
 
     <div class="coming-soon-subscribe pt-3 mt-2 mb-auto">
