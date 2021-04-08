@@ -147,7 +147,7 @@ class AdminHrDataTable extends DataTable
                   ->searchable(false)
                   ->orderable(true)
                   ->footer("Ngày vào làm"),
-          Column::computed('active')
+            Column::computed('active')
                   ->title("Trạng thái")
                   ->orderable(true)
                   ->footer("Trạng thái")
