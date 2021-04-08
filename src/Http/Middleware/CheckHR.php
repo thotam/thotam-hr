@@ -22,7 +22,7 @@ class CheckHR
                 'title' => 'Đã có lỗi sảy ra...',
                 'error_code' => '403',
                 'error_description' => 'Không có quyền truy cập',
-                'text_xlarge' => 'Tài khoản chưa được liên kết với thông tin BFO<br>Vui lòng cung cấp thông tin để được trợ giúp',
+                'text_xlarge' => 'Tài khoản chưa được liên kết với thông tin nhân sự<br>Vui lòng cung cấp thông tin để được trợ giúp',
                 ]);
         } elseif (optional(Auth::user()->hr)->active===0) {
             return response()->view('errors.dynamic',[
