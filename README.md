@@ -21,6 +21,10 @@ composer require thotam/thotam-hr
 Add "hr_key" to fillable of User Models
 ```
 
+```php
+Add "Thotam\ThotamHr\Traits\HasHrTrait" to User Models
+```
+
 #### Add CheckHR Middleware
 
 ```php
