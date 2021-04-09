@@ -5,6 +5,9 @@ namespace Thotam\ThotamHr\Http\Livewire;
 use Auth;
 use Livewire\Component;
 use Thotam\ThotamHr\Models\HR;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Permission;
 
 class HrLivewire extends Component
 {
@@ -15,6 +18,7 @@ class HrLivewire extends Component
     */
     public $key, $hoten, $ten, $ngaysinh, $ngaythuviec, $active, $old_key, $old_hr, $new_hr;
     public $modal_title, $toastr_message;
+    public $permissions, $roles, $permission_arrays, $role_arrays;
     public $hr;
 
     /**
@@ -67,6 +71,10 @@ class HrLivewire extends Component
             'ngaysinh' => 'nullable|date_format:d-m-Y',
             'ngaythuviec' => 'nullable|date_format:d-m-Y',
             'active' => 'nullable|boolean',
+            'roles' => 'nullable|array',
+            'roles.*' => 'nullable|exists:roles,name',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'nullable|exists:permissions,name',
         ];
     }
 
@@ -136,7 +144,7 @@ class HrLivewire extends Component
      */
     public function add_hr()
     {
-        if ($this->hr->cannot("add-user")) {
+        if ($this->hr->cannot("add-hr")) {
             $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Bạn không có quyền thực hiện hành động này"]);
             $this->cancel();
             return null;
@@ -159,7 +167,7 @@ class HrLivewire extends Component
      */
     public function edit_hr(HR $old_hr)
     {
-        if ($this->hr->cannot("edit-user")) {
+        if ($this->hr->cannot("edit-hr")) {
             $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Bạn không có quyền thực hiện hành động này"]);
             $this->cancel();
             return null;
@@ -192,7 +200,7 @@ class HrLivewire extends Component
      */
     public function save_hr()
     {
-        if ($this->hr->cannot("add-user")) {
+        if ($this->hr->cannot("add-hr") && $this->hr->cannot("edit-hr")) {
             $this->dispatchBrowserEvent('unblockUI');
             $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Bạn không có quyền thực hiện hành động này"]);
             return null;
@@ -253,6 +261,89 @@ class HrLivewire extends Component
                     $this->new_hr->syncRoles($old_roles);
                 }
             }
+        } catch (\Illuminate\Database\QueryException $e) {
+            $this->dispatchBrowserEvent('unblockUI');
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => implode(" - ", $e->errorInfo)]);
+            return null;
+        } catch (\Exception $e2) {
+            $this->dispatchBrowserEvent('unblockUI');
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $e2->getMessage()]);
+            return null;
+        }
+
+        //Đẩy thông tin về trình duyệt
+        $this->dispatchBrowserEvent('dt_draw');
+        $toastr_message = $this->toastr_message;
+        $this->cancel();
+        $this->dispatchBrowserEvent('toastr', ['type' => 'success', 'title' => "Thành công", 'message' => $toastr_message]);
+    }
+
+    /**
+     * set_permission_hr
+     *
+     * @param  mixed $hr
+     * @return void
+     */
+    public function set_permission_hr(HR $hr)
+    {
+        if ($this->hr->cannot("set-permission-hr")) {
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Bạn không có quyền thực hiện hành động này"]);
+            $this->cancel();
+            return null;
+        }
+
+        $this->new_hr = $hr;
+        $this->key = $this->new_hr->key;
+        $this->hoten = $this->new_hr->hoten;
+        $this->ten = $this->new_hr->ten;
+        $this->ngaysinh = optional($this->new_hr->ngaysinh)->format("d-m-Y");
+        $this->ngaythuviec = optional($this->new_hr->ngaythuviec)->format("d-m-Y");
+
+        if (trait_exists(HasRoles::class)) {
+            $this->permissions = $this->new_hr->permissions()->pluck("name", "id")->toArray();
+            $this->roles = $this->new_hr->roles()->pluck("name", "id")->toArray();
+            $this->permission_arrays = Permission::all()->groupBy("group")->toArray();
+            $this->role_arrays = Role::all()->groupBy("group")->toArray();
+        } else {
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Không tồn tại chức năng phân quyền"]);
+            $this->cancel();
+            return null;
+        }
+
+        $this->setPermissionStatus = true;
+        $this->modal_title = "Set quyền nhân sự";
+        $this->toastr_message = "Set quyền nhân sự thành công";
+
+        $this->dispatchBrowserEvent('unblockUI');
+        $this->dispatchBrowserEvent('dynamic_update');
+        $this->dispatchBrowserEvent('show_modal', "#set_permission_modal");
+    }
+
+    /**
+     * save_set_permission_hr
+     *
+     * @return void
+     */
+    public function save_set_permission_hr()
+    {
+        if ($this->hr->cannot("set-permission-hr")) {
+            $this->dispatchBrowserEvent('unblockUI');
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Bạn không có quyền thực hiện hành động này"]);
+            return null;
+        }
+
+        $this->dispatchBrowserEvent('unblockUI');
+        $this->validate([
+            'roles' => 'nullable|array',
+            'roles.*' => 'nullable|exists:roles,name',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'nullable|exists:permissions,name',
+        ]);
+        $this->dispatchBrowserEvent('blockUI');
+
+        try {
+            $this->new_hr->syncPermissions($this->permissions);
+            $this->new_hr->syncRoles($this->roles);
         } catch (\Illuminate\Database\QueryException $e) {
             $this->dispatchBrowserEvent('unblockUI');
             $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => implode(" - ", $e->errorInfo)]);

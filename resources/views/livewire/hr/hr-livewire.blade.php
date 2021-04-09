@@ -4,6 +4,7 @@
 
     <!-- Incluce các modal -->
     @include('thotam-hr::livewire.hr.modal.add_edit')
+    @include('thotam-hr::livewire.hr.modal.set_permission_modal')
 
     <!-- Scripts -->
     @push('livewires')

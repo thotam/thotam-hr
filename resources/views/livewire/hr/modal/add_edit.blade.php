@@ -19,7 +19,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label" for="key">Mã nhân sự:</label>
                                         <div id="key_div">
-                                            <input type="text" class="form-control px-2" wire:model.lazy="key" id="key" style="width: 100%" @if ($hr->key == $old_hr->key) readonly @endif placeholder="Mã nhân sự ..." autocomplete="off">
+                                            <input type="text" class="form-control px-2" wire:model.lazy="key" id="key" style="width: 100%" @if ($hr->key == optional($old_hr)->key) readonly @endif placeholder="Mã nhân sự ..." autocomplete="off">
                                         </div>
                                         @error('key')
                                             <label class="pl-1 small invalid-feedback d-inline-block" ><i class="fas mr-1 fa-exclamation-circle"></i>{{ $message }}</label>
