@@ -248,6 +248,9 @@ class HrLivewire extends Component
                     $old_permissions = $this->old_hr->permissions;
                     $old_roles = $this->old_hr->roles;
 
+                    $this->new_hr->syncPermissions([]);
+                    $this->new_hr->syncRoles([]);
+
                     $this->new_hr->update([
                         "key" => $this->key,
                         "hoten" => $this->hoten,
