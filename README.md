@@ -31,6 +31,12 @@ Add "Thotam\ThotamHr\Traits\HasHrTrait" to User Models
 Add Thotam\ThotamHr\Http\Middleware\CheckHR::Class To App\Http\Kernel.php in $routeMiddleware
 ```
 
+#### Next, you should migrate your database:
+
+```php
+php artisan migrate
+```
+
 ### Testing
 
 ```bash
