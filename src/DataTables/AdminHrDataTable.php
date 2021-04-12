@@ -40,6 +40,10 @@ class AdminHrDataTable extends DataTable
                     $Action_Icon.="<div class='col action-icon-w-50 action-icon' thotam-livewire-method='edit_hr' thotam-model-id='$query->key'><i class='text-twitter fas fa-user-edit'></i></div>";
                 }
 
+                if ($this->hr->can("set-team-hr")) {
+                    $Action_Icon.="<div class='col action-icon-w-50 action-icon' thotam-livewire-method='set_team_hr' thotam-model-id='$query->key'><i class='text-success fas fa-users'></i></div>";
+                }
+
                 if ($this->hr->can("set-permission-hr")) {
                     $Action_Icon.="<div class='col action-icon-w-50 action-icon' thotam-livewire-method='set_permission_hr' thotam-model-id='$query->key'><i class='text-indigo fas fa-cogs'></i></div>";
                 }

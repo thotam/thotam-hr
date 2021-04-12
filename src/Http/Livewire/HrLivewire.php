@@ -6,8 +6,10 @@ use Auth;
 use Livewire\Component;
 use Thotam\ThotamHr\Models\HR;
 use Spatie\Permission\Models\Role;
+use Thotam\ThotamTeam\Models\Nhom;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Permission;
+use Thotam\ThotamTeam\Traits\HasNhomTrait;
 
 class HrLivewire extends Component
 {
@@ -16,9 +18,9 @@ class HrLivewire extends Component
     *
     * @var mixed
     */
-    public $key, $hoten, $ten, $ngaysinh, $ngaythuviec, $active, $old_key, $old_hr, $new_hr;
+    public $key, $hoten, $ten, $ngaysinh, $ngaythuviec, $active, $old_key, $old_hr, $new_hr, $teams;
     public $modal_title, $toastr_message;
-    public $permissions, $roles, $permission_arrays, $role_arrays;
+    public $permissions, $roles, $permission_arrays, $role_arrays, $team_arrays;
     public $hr;
 
     /**
@@ -28,6 +30,7 @@ class HrLivewire extends Component
     public $viewStatus = false;
     public $editStatus = false;
     public $setPermissionStatus = false;
+    public $setTeamStatus = false;
 
 
     /**
@@ -35,7 +38,7 @@ class HrLivewire extends Component
      *
      * @var array
      */
-    protected $listeners = ['dynamic_update_method', 'add_hr', 'edit_hr', 'set_permission_hr', ];
+    protected $listeners = ['dynamic_update_method', 'add_hr', 'edit_hr', 'set_permission_hr', 'set_team_hr'];
 
     /**
      * dynamic_update_method
@@ -113,6 +116,7 @@ class HrLivewire extends Component
         $this->editStatus = false;
         $this->viewStatus = false;
         $this->setPermissionStatus = false;
+        $this->setTeamStatus = false;
         $this->resetValidation();
         $this->mount();
     }
@@ -347,6 +351,81 @@ class HrLivewire extends Component
         try {
             $this->new_hr->syncPermissions($this->permissions);
             $this->new_hr->syncRoles($this->roles);
+        } catch (\Illuminate\Database\QueryException $e) {
+            $this->dispatchBrowserEvent('unblockUI');
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => implode(" - ", $e->errorInfo)]);
+            return null;
+        } catch (\Exception $e2) {
+            $this->dispatchBrowserEvent('unblockUI');
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $e2->getMessage()]);
+            return null;
+        }
+
+        //Đẩy thông tin về trình duyệt
+        $this->dispatchBrowserEvent('dt_draw');
+        $toastr_message = $this->toastr_message;
+        $this->cancel();
+        $this->dispatchBrowserEvent('toastr', ['type' => 'success', 'title' => "Thành công", 'message' => $toastr_message]);
+    }
+
+    /**
+     * set_team_hr
+     *
+     * @param  mixed $hr
+     * @return void
+     */
+    public function set_team_hr(HR $hr)
+    {
+        if ($this->hr->cannot("set-team-hr")) {
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Bạn không có quyền thực hiện hành động này"]);
+            $this->cancel();
+            return null;
+        }
+
+        $this->new_hr = $hr;
+        $this->key = $this->new_hr->key;
+        $this->hoten = $this->new_hr->hoten;
+
+        if (trait_exists(HasNhomTrait::class)) {
+            $this->teams = $this->new_hr->thanhvien_of_nhoms->pluck("id")->toArray();
+            $this->team_arrays = Nhom::orderBy("order")->select("id", "full_name")->get()->toArray();
+        } else {
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Không tồn tại chức năng nhóm"]);
+            $this->cancel();
+            return null;
+        }
+
+        $this->setTeamStatus = true;
+        $this->modal_title = "Set team cho nhân sự";
+        $this->toastr_message = "Set team cho nhân sự thành công";
+
+        $this->dispatchBrowserEvent('unblockUI');
+        $this->dispatchBrowserEvent('dynamic_update');
+        $this->dispatchBrowserEvent('show_modal', "#set_team_modal");
+    }
+
+    /**
+     * set_team_hr_save
+     *
+     * @return void
+     */
+    public function set_team_hr_save()
+    {
+        if ($this->hr->cannot("set-team-hr")) {
+            $this->dispatchBrowserEvent('unblockUI');
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Bạn không có quyền thực hiện hành động này"]);
+            return null;
+        }
+
+        $this->dispatchBrowserEvent('unblockUI');
+        $this->validate([
+            'teams' => 'nullable|array',
+            'teams.*' => 'nullable|exists:nhoms,id',
+        ]);
+        $this->dispatchBrowserEvent('blockUI');
+
+        try {
+            $this->new_hr->thanhvien_of_nhoms()->sync($this->teams);
         } catch (\Illuminate\Database\QueryException $e) {
             $this->dispatchBrowserEvent('unblockUI');
             $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => implode(" - ", $e->errorInfo)]);
