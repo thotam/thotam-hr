@@ -6,6 +6,7 @@ use App\Models\User;
 use Wildside\Userstamps\Userstamps;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
+use Thotam\ThotamHr\Traits\HasMailTrait;
 use Thotam\ThotamTeam\Traits\HasNhomTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,6 +22,7 @@ class MailHR extends Model implements AuthorizableContract
     use HasRoles;
     use Authorizable;
     use HasNhomTrait;
+    use HasMailTrait;
 
     /**
      * The attributes that are mass assignable.
