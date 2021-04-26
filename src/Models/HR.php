@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class HR extends Model implements AuthorizableContract
+class MailHR extends Model implements AuthorizableContract
 {
     use HasFactory;
     use SoftDeletes;
@@ -84,5 +84,15 @@ class HR extends Model implements AuthorizableContract
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'hr_key', 'key');
+    }
+
+    /**
+     * Get all of the mails for the HR
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function mails(): HasMany
+    {
+        return $this->hasMany(MailHR::class, 'hr_key', 'key');
     }
 }
