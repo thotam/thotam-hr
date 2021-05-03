@@ -14,7 +14,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class MailHR extends Model implements AuthorizableContract
+class HR extends Model implements AuthorizableContract
 {
     use HasFactory;
     use SoftDeletes;
