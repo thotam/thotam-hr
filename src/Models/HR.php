@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Thotam\ThotamHr\Traits\HasMailTrait;
 use Thotam\ThotamTeam\Traits\HasNhomTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Thotam\ThotamBuddy\Traits\HasBuddyTraits;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,6 +24,7 @@ class HR extends Model implements AuthorizableContract
     use Authorizable;
     use HasNhomTrait;
     use HasMailTrait;
+    use HasBuddyTraits;
 
     /**
      * The attributes that are mass assignable.
