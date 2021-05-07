@@ -40,7 +40,7 @@ class HR_Sync_Command extends Command
     public function handle()
     {
 
-        $hrs = HR::where('sync', false)->orrWhereNull('sync')->limit(100)->get();
+        $hrs = HR::where('sync', false)->orWhereNull('sync')->limit(100)->get();
 
         foreach ($hrs as $hr) {
 
