@@ -4,6 +4,7 @@ namespace Thotam\ThotamHr\Console\Commands;
 
 use Thotam\ThotamHr\Models\HR;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class HR_Sync_Command extends Command
 {
@@ -12,7 +13,7 @@ class HR_Sync_Command extends Command
      *
      * @var string
      */
-    protected $signature = 'thotam-auth:hr-sync';
+    protected $signature = 'thotam-hr:hr-sync';
 
     /**
      * The console command description.
@@ -43,6 +44,18 @@ class HR_Sync_Command extends Command
 
         foreach ($hrs as $hr) {
 
+            DB::connection('member')->table('user_infos')->updateOrInsert(
+                [
+                    'mnv' => $hr->key,
+                ],
+                [
+                    'full_name' => $hr->hoten,
+                    'name' => $hr->ten,
+                    'birthday' => $hr->ngaysinh,
+                    'ngay_vao_lam' => $hr->ngaythuviec,
+                    'active' => $hr->active,
+                ]
+            );
 
             $hr->update([
                 'sync' => true,
