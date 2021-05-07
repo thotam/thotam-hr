@@ -32,7 +32,7 @@ class HR extends Model implements AuthorizableContract
      * @var array
      */
     protected $fillable = [
-        'key', 'hoten', 'ten', 'ngaysinh', 'ngaythuviec', 'active',
+        'key', 'hoten', 'ten', 'ngaysinh', 'ngaythuviec', 'active', 'sync',
     ];
 
     /**
