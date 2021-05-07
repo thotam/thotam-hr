@@ -7,6 +7,7 @@ use Livewire\Component;
 use Thotam\ThotamHr\Models\HR;
 use Spatie\Permission\Models\Role;
 use Thotam\ThotamTeam\Models\Nhom;
+use Thotam\ThotamHr\Jobs\HR_Sync_Job;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Permission;
 use Thotam\ThotamTeam\Traits\HasNhomTrait;
@@ -231,13 +232,15 @@ class HrLivewire extends Component
 
         try {
             if ($this->addStatus) {
-                HR::create([
+                $hr = HR::create([
                     "key" => $this->key,
                     "hoten" => $this->hoten,
                     "ten" => $this->ten,
                     "ngaysinh" => $this->ngaysinh,
                     "ngaythuviec" => $this->ngaythuviec,
                 ]);
+
+                HR_Sync_Job::dispatch($hr);
             } elseif ($this->editStatus) {
                 if ($this->key == $this->old_key) {
                     $this->new_hr->update([
@@ -267,6 +270,7 @@ class HrLivewire extends Component
                     $this->new_hr->syncPermissions($old_permissions);
                     $this->new_hr->syncRoles($old_roles);
                 }
+                HR_Sync_Job::dispatch($this->new_hr);
             }
         } catch (\Illuminate\Database\QueryException $e) {
             $this->dispatchBrowserEvent('unblockUI');
