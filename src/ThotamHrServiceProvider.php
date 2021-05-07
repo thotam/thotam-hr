@@ -6,6 +6,7 @@ use Livewire\Livewire;
 use Illuminate\Support\ServiceProvider;
 use Thotam\ThotamHr\Http\Livewire\HrLivewire;
 use Thotam\ThotamHr\Http\Livewire\UpdateHrLivewire;
+use Thotam\ThotamHr\Console\Commands\HR_Sync_Command;
 
 class ThotamHrServiceProvider extends ServiceProvider
 {
@@ -43,7 +44,9 @@ class ThotamHrServiceProvider extends ServiceProvider
             ], 'lang');*/
 
             // Registering package commands.
-            // $this->commands([]);
+            $this->commands([
+                HR_Sync_Command::class,
+            ]);
         }
 
         /*
