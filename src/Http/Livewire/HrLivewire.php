@@ -11,6 +11,7 @@ use Thotam\ThotamHr\Jobs\HR_Sync_Job;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Permission;
 use Thotam\ThotamTeam\Traits\HasNhomTrait;
+use Thotam\ThotamTeam\Jobs\Nhom_Sync_Job;
 
 class HrLivewire extends Component
 {
@@ -430,6 +431,10 @@ class HrLivewire extends Component
 
         try {
             $this->new_hr->thanhvien_of_nhoms()->sync($this->teams);
+
+            foreach ($this->teams as $ttteam) {
+                Nhom_Sync_Job::dispatch(Nhom::find($ttteam));
+            }
         } catch (\Illuminate\Database\QueryException $e) {
             $this->dispatchBrowserEvent('unblockUI');
             $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => implode(" - ", $e->errorInfo)]);
