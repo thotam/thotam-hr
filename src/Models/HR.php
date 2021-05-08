@@ -100,7 +100,7 @@ class HR extends Model implements AuthorizableContract
         return $this->hasMany(MailHR::class, 'hr_key', 'key');
     }
 
-    public function is_thanhvien()
+    public function getIsThanhvienAttribute()
     {
         return count($this->thanhvien_of_nhoms);
     }
