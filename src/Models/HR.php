@@ -102,6 +102,11 @@ class HR extends Model implements AuthorizableContract
 
     public function getIsThanhvienAttribute()
     {
-        return count($this->thanhvien_of_nhoms);
+        return !!count($this->thanhvien_of_nhoms);
+    }
+
+    public function getIsQuanlyAttribute()
+    {
+        return !!count($this->thanhvien_of_nhoms);
     }
 }
