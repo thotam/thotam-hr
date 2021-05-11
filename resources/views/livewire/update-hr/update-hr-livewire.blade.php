@@ -22,7 +22,7 @@
             </div>
 
             <div class="col-12 mb-3">
-                <input type="text" wire:model.lazy="nhom" class="form-control px-2 form-control-lg form-control font-secondary" placeholder="Nhóm...">
+                <input type="text" wire:model.lazy="nhom" class="form-control px-2 form-control-lg form-control font-secondary" placeholder="Nhóm và quản lý của bạn...">
                 @error('nhom')
                     <label class="pl-1 mb-0 small invalid-feedback d-inline-block" ><i class="fas mr-1 fa-exclamation-circle"></i>{{ $message }}</label>
                 @enderror
