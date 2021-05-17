@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Thotam\ThotamTeam\Models\Nhom;
 
 class HR extends Model implements AuthorizableContract
 {
@@ -118,5 +119,43 @@ class HR extends Model implements AuthorizableContract
     public function getIsQuanlyAttribute()
     {
         return !!count($this->quanly_of_nhoms);
+    }
+
+    /**
+     * getIsMktQuanlyAttribute
+     *
+     * @return void
+     */
+    public function getIsMktQuanlyAttribute()
+    {
+        $mkt_teams = Nhom::where("active", true)->where("phan_loai_id", 4)->get();
+
+        foreach ($this->quanly_of_nhoms as $nhom) {
+            if ($mkt_teams->contains($nhom)) {
+                return true;
+                break;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * getIsMktThanhvienAttribute
+     *
+     * @return void
+     */
+    public function getIsMktThanhvienAttribute()
+    {
+        $mkt_teams = Nhom::where("active", true)->where("phan_loai_id", 4)->get();
+
+        foreach ($this->thanhvien_of_nhoms as $nhom) {
+            if ($mkt_teams->contains($nhom)) {
+                return true;
+                break;
+            }
+        }
+
+        return false;
     }
 }
