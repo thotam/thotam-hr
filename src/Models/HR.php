@@ -15,6 +15,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Thotam\ThotamTeam\Models\Nhom;
+use Thotam\ThotamMkt\Traits\HasMktSubTeamTrait;
 
 class HR extends Model implements AuthorizableContract
 {
@@ -26,6 +27,7 @@ class HR extends Model implements AuthorizableContract
     use HasNhomTrait;
     use HasMailTrait;
     use HasBuddyTraits;
+    use HasMktSubTeamTrait;
 
     /**
      * The attributes that are mass assignable.
