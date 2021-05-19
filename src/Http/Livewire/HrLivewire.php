@@ -188,7 +188,7 @@ class HrLivewire extends Component
         $this->ten = $this->new_hr->ten;
         $this->ngaysinh = optional($this->new_hr->ngaysinh)->format("d-m-Y");
         $this->ngaythuviec = optional($this->new_hr->ngaythuviec)->format("d-m-Y");
-        $this->active = $this->new_hr->active;
+        $this->active = !!$this->new_hr->active;
 
         $this->editStatus = true;
         $this->modal_title = "Chỉnh sửa nhân sự";
@@ -214,10 +214,12 @@ class HrLivewire extends Component
 
         $this->updatedHoten();
 
-        if (($this->hr->key == $this->old_hr->key) && ($this->key != $this->old_key)) {
-            $this->dispatchBrowserEvent('unblockUI');
-            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Bạn không thể chỉnh sửa mã nhân sự của chính bản thân mình"]);
-            return null;
+        if ($this->editStatus) {
+            if (($this->hr->key == $this->old_hr->key) && ($this->key != $this->old_key)) {
+                $this->dispatchBrowserEvent('unblockUI');
+                $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Bạn không thể chỉnh sửa mã nhân sự của chính bản thân mình"]);
+                return null;
+            }
         }
 
         $this->dispatchBrowserEvent('unblockUI');
@@ -238,6 +240,7 @@ class HrLivewire extends Component
                     "hoten" => $this->hoten,
                     "ten" => $this->ten,
                     "ngaysinh" => $this->ngaysinh,
+                    "active" => true,
                     "ngaythuviec" => $this->ngaythuviec,
                 ]);
 
