@@ -436,7 +436,7 @@ class HrLivewire extends Component
             $this->new_hr->thanhvien_of_nhoms()->sync($this->teams);
 
             foreach ($this->teams as $ttteam) {
-                Nhom_Sync_Job::dispatch(Nhom::find($ttteam));
+                Nhom_Sync_Job::dispatch(Nhom::find($ttteam), $this->new_hr->key);
             }
         } catch (\Illuminate\Database\QueryException $e) {
             $this->dispatchBrowserEvent('unblockUI');
