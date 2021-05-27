@@ -42,10 +42,10 @@ trait HasMailTrait {
         $email = $mails->first();
 
         if (!!$email) {
-            $email->update(['mail' => $mail]);
+            $email->update(['mail' => trim($mail)]);
         } else {
             $email = new MailHR;
-            $email->mail = $mail;
+            $email->mail = trim($mail);
             $email->tag = $tag;
             $this->mails()->save($email);
         }
