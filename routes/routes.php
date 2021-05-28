@@ -14,7 +14,7 @@ use Thotam\ThotamHr\Http\Controllers\HrController;
 |
 */
 
-Route::middleware(['web', 'auth', 'CheckAccount', 'CheckHr'])->group(function () {
+Route::middleware(['web','CheckBrowser', 'auth', 'CheckAccount', 'CheckHr', 'CheckInfo'])->group(function () {
 
     //Route Admin
     Route::redirect('admin', '/', 301);
@@ -28,5 +28,12 @@ Route::middleware(['web', 'auth', 'CheckAccount', 'CheckHr'])->group(function ()
         });
 
     });
+
+
+});
+
+Route::middleware(['web','CheckBrowser', 'auth', 'CheckAccount', 'CheckHr'])->group(function () {
+
+    Route::get('info',  [HrController::class, 'info'])->name('hr.info');
 
 });

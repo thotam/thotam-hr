@@ -18,6 +18,10 @@ composer require thotam/thotam-hr
 ## Usage
 
 ```php
+edit Route::middleware(['web','CheckBrowser', 'auth', 'CheckAccount', 'CheckHr', 'CheckMail']) in App\Providers\RouteServiceProvider
+```
+
+```php
 Add "hr_key" to fillable of User Models
 ```
 
@@ -29,6 +33,7 @@ Add "Thotam\ThotamHr\Traits\HasHrTrait" to User Models
 
 ```php
 Add 'CheckHr' => Thotam\ThotamHr\Http\Middleware\CheckHR::Class To App\Http\Kernel.php in $routeMiddleware
+Add 'CheckInfo' => Thotam\ThotamHr\Http\Middleware\CheckInfo::Class To App\Http\Kernel.php in $routeMiddleware
 ```
 
 #### Next, you should migrate your database:

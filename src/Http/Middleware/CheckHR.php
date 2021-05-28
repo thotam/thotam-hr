@@ -17,21 +17,22 @@ class CheckHR
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!!!Auth::user()->hr) {
+        $hr = optional(optional(Auth::user())->hr);
+        if (!!!$hr) {
             return response()->view('thotam-hr::auth.update-info',[
                 'title' => 'Đã có lỗi sảy ra...',
                 'error_code' => '403',
                 'error_description' => 'Không có quyền truy cập',
                 'text_xlarge' => 'Tài khoản chưa được liên kết với thông tin nhân sự<br>Vui lòng cung cấp thông tin để được trợ giúp',
                 ]);
-        } elseif (optional(Auth::user()->hr)->active===0) {
+        } elseif ($hr->active===0) {
             return response()->view('errors.dynamic',[
                 'title' => 'Hồ sơ đã bị vô hiệu hóa',
                 'error_code' => '403',
                 'error_description' => 'Không có quyền truy cập',
                 'text_xlarge' => 'Vui lòng liên hệ phòng truyền thông để được trợ giúp',
                 ]);
-        } elseif (!!!optional(Auth::user()->hr)->active) {
+        } elseif (!!!$hr->active) {
             return response()->view('errors.dynamic',[
                 'title' => 'Hồ sơ chưa được kích hoạt',
                 'error_code' => '403',

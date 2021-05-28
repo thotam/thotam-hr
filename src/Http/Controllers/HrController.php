@@ -25,4 +25,16 @@ class HrController extends Controller
             ]);
         }
     }
+
+    /**
+     * info
+     *
+     * @return void
+     */
+    public function info()
+    {
+        return view('thotam-hr::auth.update-more-info', [
+            'title' => 'Thông tin cá nhân',
+        ]);
+    }
 }

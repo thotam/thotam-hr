@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Thotam\ThotamHr\Http\Livewire\HrLivewire;
 use Thotam\ThotamHr\Http\Livewire\UpdateHrLivewire;
 use Thotam\ThotamHr\Console\Commands\HR_Sync_Command;
+use Thotam\ThotamHr\Http\Livewire\UpdateInfoLivewire;
 
 class ThotamHrServiceProvider extends ServiceProvider
 {
@@ -73,6 +74,7 @@ class ThotamHrServiceProvider extends ServiceProvider
         if (class_exists(Livewire::class)) {
             Livewire::component('thotam-hr::update-hr-livewire', UpdateHrLivewire::class);
             Livewire::component('thotam-hr::hr-livewire', HrLivewire::class);
+            Livewire::component('thotam-hr::update-info-livewire', UpdateInfoLivewire::class);
         }
     }
 }
