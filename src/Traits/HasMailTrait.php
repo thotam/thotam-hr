@@ -3,6 +3,7 @@
 namespace Thotam\ThotamHr\Traits;
 
 use Thotam\ThotamHr\Models\MailHR;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait HasMailTrait {
 
