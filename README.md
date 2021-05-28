@@ -18,7 +18,7 @@ composer require thotam/thotam-hr
 ## Usage
 
 ```php
-edit Route::middleware(['web','CheckBrowser', 'auth', 'CheckAccount', 'CheckHr', 'CheckMail']) in App\Providers\RouteServiceProvider
+edit Route::middleware(['web', 'auth', 'CheckAccount', 'CheckHr', 'CheckMail']) in App\Providers\RouteServiceProvider
 ```
 
 ```php
