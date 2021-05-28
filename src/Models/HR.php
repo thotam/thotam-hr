@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Thotam\ThotamTeam\Models\Nhom;
 use Thotam\ThotamMkt\Traits\HasMktSubTeamTrait;
 
 class HR extends Model implements AuthorizableContract
@@ -91,111 +90,5 @@ class HR extends Model implements AuthorizableContract
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'hr_key', 'key');
-    }
-
-    /**
-     * Get all of the mails for the HR
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function mails(): HasMany
-    {
-        return $this->hasMany(MailHR::class, 'hr_key', 'key');
-    }
-
-    /**
-     * getIsThanhvienAttribute
-     *
-     * @return void
-     */
-    public function getIsThanhvienAttribute()
-    {
-        return !!count($this->thanhvien_of_nhoms);
-    }
-
-    /**
-     * getIsQuanlyAttribute
-     *
-     * @return void
-     */
-    public function getIsQuanlyAttribute()
-    {
-        return !!count($this->quanly_of_nhoms);
-    }
-
-    /**
-     * getIsMktQuanlyAttribute
-     *
-     * @return void
-     */
-    public function getIsMktQuanlyAttribute()
-    {
-        $mkt_teams = Nhom::where("active", true)->where("phan_loai_id", 4)->get();
-
-        foreach ($this->quanly_of_nhoms as $nhom) {
-            if ($mkt_teams->contains($nhom)) {
-                return true;
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * getIsMktThanhvienAttribute
-     *
-     * @return void
-     */
-    public function getIsMktThanhvienAttribute()
-    {
-        $mkt_teams = Nhom::where("active", true)->where("phan_loai_id", 4)->get();
-
-        foreach ($this->thanhvien_of_nhoms as $nhom) {
-            if ($mkt_teams->contains($nhom)) {
-                return true;
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * getIsOtcQuanlyAttribute
-     *
-     * @return void
-     */
-    public function getIsOtcQuanlyAttribute()
-    {
-        $otc_teams = Nhom::where("active", true)->where("kenh_kinh_doanh_id", 2)->get();
-
-        foreach ($this->quanly_of_nhoms as $nhom) {
-            if ($otc_teams->contains($nhom)) {
-                return true;
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * getIsOtcThanhvienAttribute
-     *
-     * @return void
-     */
-    public function getIsOtcThanhvienAttribute()
-    {
-        $otc_teams = Nhom::where("active", true)->where("kenh_kinh_doanh_id", 2)->get();
-
-        foreach ($this->thanhvien_of_nhoms as $nhom) {
-            if ($otc_teams->contains($nhom)) {
-                return true;
-                break;
-            }
-        }
-
-        return false;
     }
 }

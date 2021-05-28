@@ -7,6 +7,16 @@ use Thotam\ThotamHr\Models\MailHR;
 trait HasMailTrait {
 
     /**
+     * Get all of the mails for the HR
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function mails(): HasMany
+    {
+        return $this->hasMany(MailHR::class, 'hr_key', 'key');
+    }
+
+    /**
      * getMail
      *
      * @param  mixed $tag
