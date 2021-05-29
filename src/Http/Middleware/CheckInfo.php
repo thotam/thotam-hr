@@ -22,7 +22,8 @@ class CheckInfo
         if (!!!optional($hr->mails)->count()) {
             return response()->view('thotam-hr::auth.update-more-info',[
                 'title' => 'Thông tin cá nhân',
-                'msg' => 'Vui lòng cập nhật Email để tiếp tục'
+                'msg' => 'Vui lòng cập nhật Email để tiếp tục',
+                'reload' => true
                 ]);
         } else {
             return $next($request);

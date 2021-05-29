@@ -72,6 +72,6 @@
     </div>
 
     <div class="text-right mt-4">
-        <button wire:click.prevent="save_info()" thotam-blockui wire:loading.attr="disabled" class="btn btn-primary">Lưu</button>
+        <button wire:click.prevent="save_info({{ isset($reload) }})" thotam-blockui wire:loading.attr="disabled" class="btn btn-primary">Lưu</button>
     </div>
 </div>

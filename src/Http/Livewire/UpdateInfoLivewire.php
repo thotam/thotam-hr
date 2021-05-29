@@ -5,6 +5,7 @@ namespace Thotam\ThotamHr\Http\Livewire;
 use Auth;
 use Carbon\Carbon;
 use Livewire\Component;
+use Illuminate\Support\Facades\Redirect;
 
 class UpdateInfoLivewire extends Component
 {
@@ -14,7 +15,7 @@ class UpdateInfoLivewire extends Component
     *
     * @var mixed
     */
-    public $hr;
+    public $hr, $reload;
 
     public $mail = [];
 
@@ -106,7 +107,7 @@ class UpdateInfoLivewire extends Component
      *
      * @return void
      */
-    public function save_info()
+    public function save_info($reload = null)
     {
         $this->mail = array_filter($this->mail);
 
@@ -137,5 +138,9 @@ class UpdateInfoLivewire extends Component
         $this->dispatchBrowserEvent('unblockUI');
         $this->cancel();
         $this->dispatchBrowserEvent('toastr', ['type' => 'success', 'title' => "Thành công", 'message' => "Lưu thông tin thành công"]);
+
+        if (!!$reload) {
+            return Redirect::to(url()->previous());
+        }
     }
 }

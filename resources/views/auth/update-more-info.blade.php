@@ -24,7 +24,12 @@
 
     <div class="card overflow-hidden p-3">
 
-        @livewire('thotam-hr::update-info-livewire')
+        @if (isset($reload))
+            @livewire('thotam-hr::update-info-livewire', ["reload" => $reload])
+        @else
+            @livewire('thotam-hr::update-info-livewire')
+        @endif
+
 
     </div>
 
