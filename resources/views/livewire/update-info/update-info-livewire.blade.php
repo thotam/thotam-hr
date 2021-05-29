@@ -39,7 +39,7 @@
             @if ($hr->is_mkt_thanhvien || $hr->is_mkt_quanly)
                 <div class="col-12">
                     <div class="form-group">
-                        <label class="col-form-label text-indigo" for="mail_tt_mkt">Mail TT-MKT:</label>
+                        <label class="col-form-label text-indigo" for="mail_tt_mkt">Mail nhận thông tin từ phòng Truyền thông - Marketing:</label>
                         <div id="mail_tt_mkt_div">
                             <input type="email" class="form-control px-2" wire:key="mail_tt_mkt" wire:model.lazy="mail.tt_mkt" id="mail_tt_mkt" style="width: 100%" placeholder="Mail nhận thông tin nội bộ phòng TT-MKT ..." autocomplete="off">
                         </div>
@@ -55,7 +55,7 @@
 
             <div class="col-12">
                 <div class="form-group">
-                    <label class="col-form-label text-indigo" for="mail_buddy">Mail Buddy:</label>
+                    <label class="col-form-label text-indigo" for="mail_buddy">Mail nhận thông tin Buddy:</label>
                     <div id="mail_buddy_div">
                         <input type="email" class="form-control px-2" wire:key="mail_buddy" wire:model.lazy="mail.buddy" id="mail_buddy" style="width: 100%" placeholder="Mail nhận thông tin Buddy ..." autocomplete="off">
                     </div>
