@@ -18,6 +18,34 @@ trait HasMailTrait {
     }
 
     /**
+     * getMailNoiBo
+     *
+     * @param  mixed $tag
+     * @return void
+     */
+    public function getMailNoiBo()
+    {
+        $mail = $this->mails()->latest()->where("tag", 'noibo');
+
+        $email = $mail->first();
+        return !!$email ? $email->mail : NULL;
+    }
+
+    /**
+     * getMailCaNhan
+     *
+     * @param  mixed $tag
+     * @return void
+     */
+    public function getMailCaNhan()
+    {
+        $mail = $this->mails()->latest()->where("tag", 'canhan');
+
+        $email = $mail->first();
+        return !!$email ? $email->mail : NULL;
+    }
+
+    /**
      * getMail
      *
      * @param  mixed $tag
@@ -32,7 +60,7 @@ trait HasMailTrait {
         }
 
         $email = $mail->first();
-        return !!$email ? $email->mail : NULL;
+        return !!$email ? $email->mail : $this->getMailCaNhan();
     }
 
     /**
