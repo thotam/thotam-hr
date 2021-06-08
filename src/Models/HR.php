@@ -10,11 +10,12 @@ use Thotam\ThotamHr\Traits\HasMailTrait;
 use Thotam\ThotamTeam\Traits\HasNhomTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Thotam\ThotamBuddy\Traits\HasBuddyTraits;
+use Thotam\ThotamMkt\Traits\HasMktSubTeamTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Thotam\ThotamIcpc1hnApi\Traits\Has_iCPC1HN_Account_Trait;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Thotam\ThotamMkt\Traits\HasMktSubTeamTrait;
 
 class HR extends Model implements AuthorizableContract
 {
@@ -27,6 +28,7 @@ class HR extends Model implements AuthorizableContract
     use HasMailTrait;
     use HasBuddyTraits;
     use HasMktSubTeamTrait;
+    use Has_iCPC1HN_Account_Trait;
 
     /**
      * The attributes that are mass assignable.
