@@ -71,6 +71,42 @@
         </div>
     </div>
 
+    @if ($hr->is_mkt_quanly || $hr->is_mkt_thanhvien)
+        <div class="col-12">
+            <h1 class="text-center font-weight-bolder pt-3 mb-3">
+                Thông tin Tài khoản sổ tay
+            </h1>
+
+            <div class="row px-3">
+
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label text-indigo" for="icpc1hn_taikhoan">Số điện thoại:</label>
+                        <div id="icpc1hn_taikhoan_div">
+                            <input type="text" class="form-control px-2" wire:key="icpc1hn_taikhoan" wire:model.lazy="icpc1hn_taikhoan" id="icpc1hn_taikhoan" style="width: 100%" placeholder="Số điện thoại ..." autocomplete="off">
+                        </div>
+                        @error('icpc1hn_taikhoan')
+                            <label class="pl-1 small invalid-feedback d-inline-block" ><i class="fas mr-1 fa-exclamation-circle"></i>{{ $message }}</label>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label text-indigo" for="icpc1hn_matkhau">Mật khẩu:</label>
+                        <div id="icpc1hn_matkhau_div">
+                            <input type="text" class="form-control px-2" wire:key="icpc1hn_matkhau" wire:model.lazy="icpc1hn_matkhau" id="icpc1hn_matkhau" style="width: 100%" placeholder="Mật khẩu ..." autocomplete="off">
+                        </div>
+                        @error('icpc1hn_matkhau')
+                            <label class="pl-1 small invalid-feedback d-inline-block" ><i class="fas mr-1 fa-exclamation-circle"></i>{{ $message }}</label>
+                        @enderror
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    @endif
+
     <div class="text-right mt-4">
         <button wire:click.prevent="save_info({{ isset($reload) }})" thotam-blockui wire:loading.attr="disabled" class="btn btn-primary">Lưu</button>
     </div>

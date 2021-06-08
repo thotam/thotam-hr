@@ -25,6 +25,12 @@ class CheckInfo
                 'msg' => 'Vui lòng cập nhật Email để tiếp tục',
                 'reload' => true
                 ]);
+        } elseif (($hr->is_mkt_quanly || $hr->is_mkt_thanhvien) && !!!optional($hr->icpc1hn_account)->count()) {
+            return response()->view('thotam-hr::auth.update-more-info',[
+                'title' => 'Thông tin cá nhân',
+                'msg' => 'Vui lòng cập nhật Tài khoản sổ tay để tiếp tục',
+                'reload' => true
+                ]);
         } else {
             return $next($request);
         }
