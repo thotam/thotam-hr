@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Thotam\ThotamHr\Traits\HasMailTrait;
 use Thotam\ThotamTeam\Traits\HasNhomTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Thotam\ThotamBuddy\Traits\HasBuddyTraits;
 use Thotam\ThotamMktKpi\Traits\HasMktKpiTrait;
 use Thotam\ThotamMkt\Traits\HasMktSubTeamTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,7 +26,6 @@ class HR extends Model implements AuthorizableContract
     use Authorizable;
     use HasNhomTrait;
     use HasMailTrait;
-    use HasBuddyTraits;
     use HasMktSubTeamTrait;
     use Has_iCPC1HN_Account_Trait;
     use HasMktKpiTrait;
