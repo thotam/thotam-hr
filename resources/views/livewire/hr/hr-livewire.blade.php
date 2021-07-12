@@ -16,4 +16,9 @@
             });
         </script>
     @endpush
+
+    <!-- Styles -->
+    @push('styles')
+        @include('thotam-hr::livewire.hr.sub.style')
+    @endpush
 </div>
