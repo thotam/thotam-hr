@@ -37,8 +37,8 @@
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label class="col-form-label text-indigo" for="teams">Nhóm:</label>
-                                            <div class="select2-success" id="teams_div">
-                                                <select class="form-control px-2 thotam-select2-multi" multiple thotam-placeholder="Nhóm ..." thotam-search="10" wire:model="teams" id="teams" style="width: 100%">
+                                            <div class="select2-success" id="teams_div" wire:ignore>
+                                                <select class="form-control px-2" multiple thotam-placeholder="Nhóm ..." thotam-search="10" wire:model="teams" id="teams" style="width: 100%" x-init="thotam_select2($el, @this)">
                                                     @if (!!count($team_arrays))
                                                         @foreach ($team_arrays as $team_array)
                                                             <option value="{{ $team_array["id"] }}">{{ $team_array["full_name"] }}</option>
