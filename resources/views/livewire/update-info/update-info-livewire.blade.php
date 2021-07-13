@@ -43,6 +43,7 @@
                         <div id="mail_tt_mkt_div">
                             <input type="email" class="form-control px-2" wire:key="mail_tt_mkt" wire:model.lazy="mail.tt_mkt" id="mail_tt_mkt" style="width: 100%" placeholder="Mail nhận thông tin nội bộ phòng TT-MKT ..." autocomplete="off">
                         </div>
+                        <label class="pl-1 small invalid-feedback d-inline-block text-indigo" ><i class="fas mr-1 fa-exclamation-circle"></i>Email của bạn để nhận thông tin từ phòng Truyền thông - Marketing, nếu để trống sẽ tự động lấy theo Mail cá nhân</label>
                         @error('mail')
                             <label class="pl-1 small invalid-feedback d-inline-block" ><i class="fas mr-1 fa-exclamation-circle"></i>{{ $message }}</label>
                         @enderror
@@ -53,12 +54,13 @@
                 </div>
             @endif
 
-            <div class="col-12">
+            {{-- <div class="col-12">
                 <div class="form-group">
                     <label class="col-form-label text-indigo" for="mail_buddy">Mail nhận thông tin Buddy:</label>
                     <div id="mail_buddy_div">
                         <input type="email" class="form-control px-2" wire:key="mail_buddy" wire:model.lazy="mail.buddy" id="mail_buddy" style="width: 100%" placeholder="Mail nhận thông tin Buddy ..." autocomplete="off">
                     </div>
+                    <label class="pl-1 small invalid-feedback d-inline-block text-indigo" ><i class="fas mr-1 fa-exclamation-circle"></i>Email của bạn để nhận thông tin liên quan tới Buddy, nếu để trống sẽ tự động lấy theo Mail cá nhân</label>
                     @error('mail')
                         <label class="pl-1 small invalid-feedback d-inline-block" ><i class="fas mr-1 fa-exclamation-circle"></i>{{ $message }}</label>
                     @enderror
@@ -66,7 +68,7 @@
                         <label class="pl-1 small invalid-feedback d-inline-block" ><i class="fas mr-1 fa-exclamation-circle"></i>{{ $message }}</label>
                     @enderror
                 </div>
-            </div>
+            </div> --}}
 
         </div>
     </div>
