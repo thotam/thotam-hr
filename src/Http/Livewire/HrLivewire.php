@@ -396,7 +396,7 @@ class HrLivewire extends Component
 
         if (trait_exists(HasNhomTrait::class)) {
             $this->teams = $this->new_hr->thanhvien_of_nhoms->pluck("id")->toArray();
-            $this->team_arrays = Nhom::orderBy("order")->select("id", "full_name")->get()->toArray();
+            $this->team_arrays = Nhom::orderBy("order")->where('active', true)->select("id", "full_name")->get()->toArray();
         } else {
             $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Không tồn tại chức năng nhóm"]);
             $this->cancel();
