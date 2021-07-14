@@ -29,14 +29,18 @@
             </div>
 
             <div class="col-12 mb-3" id="ngaysinh_div">
-                <input type="text" wire:model="ngaysinh" thotam-startview="3" thotam-container="ngaysinh_div" class="thotam-datepicker form-control px-2 form-control-lg form-control font-secondary" readonly placeholder="Ngày sinh...">
+                <div wire:ignore>
+                    <input type="text" wire:model="ngaysinh" thotam-container="ngaysinh_div" thotam-orientation="top" class="form-control px-2 form-control-lg form-control font-secondary" readonly placeholder="Ngày sinh..." x-init="thotam_datepicker($el, @this, 0, 2)">
+                </div>
                 @error('ngaysinh')
                     <label class="pl-1 mb-0 small invalid-feedback d-inline-block" ><i class="fas mr-1 fa-exclamation-circle"></i>{{ $message }}</label>
                 @enderror
             </div>
 
             <div class="col-12 mb-3" id="ngaythuviec_div">
-                <input type="text" wire:model="ngaythuviec" thotam-startview="0" thotam-container="ngaythuviec_div" class="thotam-datepicker form-control px-2 form-control-lg form-control font-secondary" readonly placeholder="Ngày vào làm...">
+                <div wire:ignore>
+                    <input type="text" wire:model="ngaythuviec" thotam-container="ngaythuviec_div" thotam-orientation="top" class="form-control px-2 form-control-lg form-control font-secondary" readonly placeholder="Ngày vào làm..." x-init="thotam_datepicker($el, @this)">
+                </div>
                 @error('ngaythuviec')
                     <label class="pl-1 mb-0 small invalid-feedback d-inline-block" ><i class="fas mr-1 fa-exclamation-circle"></i>{{ $message }}</label>
                 @enderror
@@ -50,13 +54,4 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    @push('livewires')
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                window.thotam_livewire = @this;
-                Livewire.emit("dynamic_update_method");
-            });
-        </script>
-    @endpush
 </div>

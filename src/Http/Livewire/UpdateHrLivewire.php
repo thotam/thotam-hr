@@ -56,7 +56,7 @@ class UpdateHrLivewire extends Component
         return [
             'hoten' => 'required|string|max:255',
             'nhom' => 'required|string|max:255',
-            'hr_key' => 'required|exists:hrs,key',
+            'hr_key' => 'nullable|exists:hrs,key',
             'ngaysinh' => 'required|date_format:d-m-Y',
             'ngaythuviec' => 'required|date_format:d-m-Y',
         ];
@@ -128,7 +128,7 @@ class UpdateHrLivewire extends Component
         }
 
         $this->update_hr->hoten = mb_convert_case(trim($this->hoten), MB_CASE_TITLE, "UTF-8");
-        $this->update_hr->hr_key = $this->hr_key;
+        $this->update_hr->hr_key = !!$this->hr_key ? $this->hr_key : NULL;
         $this->update_hr->nhom = $this->nhom;
         $this->update_hr->ngaysinh = $this->ngaysinh;
         $this->update_hr->ngaythuviec = $this->ngaythuviec;
@@ -139,7 +139,7 @@ class UpdateHrLivewire extends Component
 
         $HR_Info = HR::find($this->hr_key);
 
-        if (($HR_Info->hoten == $this->update_hr->hoten) && (($HR_Info->ngaysinh->format("d-m-Y") == $this->update_hr->ngaysinh->format("d-m-Y")) && ($HR_Info->ngaythuviec->format("d-m-Y") == $this->update_hr->ngaythuviec->format("d-m-Y")))) {
+        if (!!$HR_Info && ($HR_Info->hoten == $this->update_hr->hoten) && (($HR_Info->ngaysinh->format("d-m-Y") == $this->update_hr->ngaysinh->format("d-m-Y")) && ($HR_Info->ngaythuviec->format("d-m-Y") == $this->update_hr->ngaythuviec->format("d-m-Y")))) {
             if ($this->user->hr()->associate($HR_Info)->save()) {
                 $HR_Info->update(["active", true]);
                 return Redirect::to(url()->previous());
