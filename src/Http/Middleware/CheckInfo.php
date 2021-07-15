@@ -19,7 +19,7 @@ class CheckInfo
     {
         $hr = optional(optional(Auth::user())->hr);
 
-        if (!!!optional($hr->mails)->count()) {
+        if (!!!$hr->getMail('canhan')) {
             return response()->view('thotam-hr::auth.update-more-info',[
                 'title' => 'Thông tin cá nhân',
                 'msg' => 'Vui lòng cập nhật Email để tiếp tục',
