@@ -7,6 +7,7 @@ use Wildside\Userstamps\Userstamps;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Thotam\ThotamHr\Traits\HasMailTrait;
+use Thotam\ThotamKbyt\Traits\HasKbytTrait;
 use Thotam\ThotamTeam\Traits\HasNhomTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Thotam\ThotamMktKpi\Traits\HasMktKpiTrait;
@@ -29,6 +30,7 @@ class HR extends Model implements AuthorizableContract
     use HasMktSubTeamTrait;
     use Has_iCPC1HN_Account_Trait;
     use HasMktKpiTrait;
+    use HasKbytTrait;
 
     /**
      * The attributes that are mass assignable.
