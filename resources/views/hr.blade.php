@@ -9,6 +9,7 @@
     <!-- Dependencies -->
     <script src="{{ mix('/vendor/libs/datatables/datatables.js') }}"></script>
     <script src="{{ mix('/vendor/libs/select2/select2.js') }}"></script>
+    <script src="{{ mix('/vendor/libs/bootstrap-filestyle2/bootstrap-filestyle.js') }}"></script>
     <script src="{{ mix('/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
 @endsection
 

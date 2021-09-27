@@ -4,17 +4,21 @@ namespace Thotam\ThotamHr\Http\Livewire;
 
 use Auth;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Thotam\ThotamHr\Models\HR;
 use Spatie\Permission\Models\Role;
 use Thotam\ThotamTeam\Models\Nhom;
 use Thotam\ThotamHr\Jobs\HR_Sync_Job;
 use Spatie\Permission\Traits\HasRoles;
+use Thotam\ThotamHr\Imports\BfoImport;
 use Spatie\Permission\Models\Permission;
-use Thotam\ThotamTeam\Traits\HasNhomTrait;
 use Thotam\ThotamTeam\Jobs\Nhom_Sync_Job;
+use Thotam\ThotamTeam\Traits\HasNhomTrait;
 
 class HrLivewire extends Component
 {
+    use WithFileUploads;
+
     /**
     * Các biến sử dụng trong Component
     *
@@ -24,11 +28,13 @@ class HrLivewire extends Component
     public $modal_title, $toastr_message;
     public $permissions, $roles, $permission_arrays, $role_arrays, $team_arrays;
     public $hr;
+    public $file_data_bfo;
 
     /**
      * @var bool
      */
     public $addStatus = false;
+    public $importStatus = false;
     public $viewStatus = false;
     public $editStatus = false;
     public $setPermissionStatus = false;
@@ -437,6 +443,86 @@ class HrLivewire extends Component
 
             foreach ($this->teams as $ttteam) {
                 Nhom_Sync_Job::dispatch(Nhom::find($ttteam), $this->new_hr->key, $this->teams);
+            }
+        } catch (\Illuminate\Database\QueryException $e) {
+            $this->dispatchBrowserEvent('unblockUI');
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => implode(" - ", $e->errorInfo)]);
+            return null;
+        } catch (\Exception $e2) {
+            $this->dispatchBrowserEvent('unblockUI');
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $e2->getMessage()]);
+            return null;
+        }
+
+        //Đẩy thông tin về trình duyệt
+        $this->dispatchBrowserEvent('dt_draw');
+        $toastr_message = $this->toastr_message;
+        $this->cancel();
+        $this->dispatchBrowserEvent('toastr', ['type' => 'success', 'title' => "Thành công", 'message' => $toastr_message]);
+    }
+
+    /**
+     * import_hr
+     *
+     * @return void
+     */
+    public function import_hr()
+    {
+        if ($this->hr->cannot("import-hr")) {
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Bạn không có quyền thực hiện hành động này"]);
+            $this->cancel();
+            return null;
+        }
+
+        $this->importStatus = true;
+        $this->modal_title = "Import nhân sự mới";
+        $this->toastr_message = "Import nhân sự mới thành công";
+
+        $this->dispatchBrowserEvent('unblockUI');
+        $this->dispatchBrowserEvent('dynamic_update');
+        $this->dispatchBrowserEvent('show_modal', "#import_modal");
+    }
+
+    /**
+     * do_import_hr
+     *
+     * @return void
+     */
+    public function do_import_hr()
+    {
+        if ($this->hr->cannot("import-hr")) {
+            $this->dispatchBrowserEvent('unblockUI');
+            $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => "Bạn không có quyền thực hiện hành động này"]);
+            $this->cancel();
+        }
+
+        $this->dispatchBrowserEvent('unblockUI');
+        $this->validate([
+            'file_data_bfo' => 'required|file|mimetypes:application/vnd.ms-excel',
+        ]);
+        $this->dispatchBrowserEvent('blockUI');
+
+        try {
+            $datas = (new BfoImport)->toArray($this->file_data_bfo)[0];
+
+            foreach ($datas as $data) {
+                if (!!$data["ma_nhan_su"]) {
+                    $import_hoten = mb_convert_case(trim($data["ho_ten"]), MB_CASE_TITLE, "UTF-8");
+                    $import_names = explode(' ', $import_hoten);
+                    $import_ten = array_pop($import_names);
+
+                    HR::updateOrCreate([
+                        'key' => $data["ma_nhan_su"],
+                    ],[
+                        'hoten' => $import_hoten,
+                        'ten' => $import_ten,
+                        'ngaysinh' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['ngay_sinh'])->format('d-m-Y'),
+                        'ngaythuviec' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['ngay_thu_viec'])->format('d-m-Y'),
+                        'active' => true,
+                    ]);
+                } else {
+                    break;
+                }
             }
         } catch (\Illuminate\Database\QueryException $e) {
             $this->dispatchBrowserEvent('unblockUI');

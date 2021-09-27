@@ -34,6 +34,15 @@ class Hr_Role_Permission_Seeder extends Seeder
         ]);
 
         $permission[] = Permission::updateOrCreate([
+            'name' => 'import-hr'
+        ],[
+            "description" => "Import Nhân sự",
+            "group" => "HR",
+            "order" => 2,
+            "lock" => true,
+        ]);
+
+        $permission[] = Permission::updateOrCreate([
             'name' => 'edit-hr'
         ],[
             "description" => "Sửa Nhân sự",
