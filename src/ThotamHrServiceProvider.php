@@ -3,6 +3,7 @@
 namespace Thotam\ThotamHr;
 
 use Livewire\Livewire;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Thotam\ThotamHr\Http\Livewire\HrLivewire;
 use Thotam\ThotamHr\Http\Livewire\UpdateHrLivewire;
@@ -22,7 +23,9 @@ class ThotamHrServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'thotam-hr');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'thotam-hr');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__.'/../routes/routes.php');
+        Route::domain('beta.' . env('APP_DOMAIN', 'cpc1hn.com.vn'))->group(function () {
+            $this->loadRoutesFrom(__DIR__.'/../routes/routes.php');
+        });
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
