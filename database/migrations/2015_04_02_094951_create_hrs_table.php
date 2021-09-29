@@ -17,8 +17,8 @@ class CreateHrsTable extends Migration
             $table->string('key', 10);
             $table->string('hoten', 255);
             $table->string('ten', 100);
-            $table->timestamp('ngaysinh')->nullable()->default(null);
-            $table->timestamp('ngaythuviec')->nullable()->default(null);
+            $table->dateTime('ngaysinh')->nullable()->default(null);
+            $table->dateTime('ngaythuviec')->nullable()->default(null);
             $table->boolean('active')->nullable()->default(null);
             $table->primary('key');
             $table->unsignedBigInteger('created_by')->nullable()->default(null);
