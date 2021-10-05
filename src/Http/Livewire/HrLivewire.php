@@ -519,6 +519,7 @@ class HrLivewire extends Component
                         'ngaysinh' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['ngay_sinh'])->format('d-m-Y'),
                         'ngaythuviec' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['ngay_thu_viec'])->format('d-m-Y'),
                         'active' => true,
+                        'sync' => false,
                     ]);
                 } else {
                     break;
