@@ -39,8 +39,8 @@ class UpdateInfoLivewire extends Component
         return [
             'mail' => 'nullable|array',
             'mail.*' => 'nullable|email:rfc,dns',
-            'mail.canhan' => 'required',
-            'mail.noibo' => 'ends_with:@cpc1hn.com.vn,@cpc1hn.vn',
+            'mail.noibo' => 'nullable|email:rfc,dns|ends_with:@cpc1hn.com.vn,@cpc1hn.vn',
+            'mail.canhan' => 'required|email:rfc,dns',
             'icpc1hn_taikhoan' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
             'icpc1hn_matkhau' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
         ];
@@ -107,7 +107,8 @@ class UpdateInfoLivewire extends Component
     public function mount()
     {
         $this->hr = Auth::user()->hr;
-        $this->mail = $this->hr->mails->pluck('mail', 'tag')->toArray();
+        $this->hr->mails()->whereNull('tag')->delete();
+        $this->mail = $this->hr->mails->whereNotNull('tag')->pluck('mail', 'tag')->toArray();
         $this->icpc1hn_taikhoan = optional($this->hr->icpc1hn_account)->account;
         $this->icpc1hn_matkhau = optional($this->hr->icpc1hn_account)->password;
     }
@@ -125,8 +126,8 @@ class UpdateInfoLivewire extends Component
         $this->validate([
             'mail' => 'nullable|array',
             'mail.*' => 'nullable|email:rfc,dns',
-            'mail.canhan' => 'required',
-            'mail.noibo' => 'ends_with:@cpc1hn.com.vn,@cpc1hn.vn',
+            'mail.noibo' => 'nullable|email:rfc,dns|ends_with:@cpc1hn.com.vn,@cpc1hn.vn',
+            'mail.canhan' => 'required|email:rfc,dns',
             'icpc1hn_taikhoan' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
             'icpc1hn_matkhau' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
         ]);

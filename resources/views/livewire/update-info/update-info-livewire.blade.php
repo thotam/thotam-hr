@@ -8,7 +8,7 @@
 
             <div class="col-12">
                 <div class="form-group">
-                    <label class="col-form-label text-indigo" for="mail_noibo">Mail nội bộ:</label>
+                    <label class="col-form-label text-indigo" for="mail_noibo">Mail nội bộ (Mail @cpc1hn.com.vn, @cpc1hn.vn):</label>
                     <div id="mail_noibo_div">
                         <input type="email" class="form-control px-2" wire:key="mail_noibo" wire:model.lazy="mail.noibo" id="mail_noibo" style="width: 100%" placeholder="Mail nội bộ ..." autocomplete="off">
                     </div>
