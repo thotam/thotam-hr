@@ -148,6 +148,69 @@ class UpdateInfoLivewire extends Component
                 $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: '. $response->status() . ' ' .$response->getReasonPhrase()]);
                 return null;
             }
+
+            //Lấy danh sách nhóm
+            $gruops = $this->iCPC1HN_Group_Get($response->json()['token']);
+            if ($gruops->status() == 200) {
+                $json_array = $gruops->json();
+                if ($json_array["ResCode"] != 0) {
+                    $this->dispatchBrowserEvent('unblockUI');
+                    $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $json_array["ResCode"] ." ". $json_array["ResMes"]]);
+                    return null;
+                }
+            } else {
+                $this->dispatchBrowserEvent('unblockUI');
+                $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: '. $gruops->status() . ' ' .$gruops->getReasonPhrase()]);
+                return null;
+            }
+
+            $test_check = false;
+            $mkt_check = true;
+            foreach ($gruops->json()['Data'] as $gruop) {
+                if (collect($gruop)->contains('CNHN-MKT')) {
+                    $mkt_check = false;
+                }
+                if (collect($gruop)->contains('CNHN-Test')) {
+                    $test_check = true;
+                }
+                if ($test_check && !$mkt_check) {
+                    break;
+                }
+            }
+
+            //Thêm nào nhóm MKT
+            if ($mkt_check) {
+                $addMKT = $this->iCPC1HN_Group_Add($response->json()['Data']['idEmployee'], "CNHN-MKT");
+                if ($addMKT->status() == 200) {
+                    $json_array = $addMKT->json();
+                    if ($json_array["ResCode"] != 0) {
+                        $this->dispatchBrowserEvent('unblockUI');
+                        $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $json_array["ResCode"] ." ". $json_array["ResMes"]]);
+                        return null;
+                    }
+                } else {
+                    $this->dispatchBrowserEvent('unblockUI');
+                    $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: '. $addMKT->status() . ' ' .$addMKT->getReasonPhrase()]);
+                    return null;
+                }
+            }
+
+            //Xóa khỏa nhóm Test
+            if ($test_check) {
+                $removeTest = $this->iCPC1HN_Group_Delete($response->json()['Data']['idEmployee'], "CNHN-Test");
+                if ($removeTest->status() == 200) {
+                    $json_array = $removeTest->json();
+                    if ($json_array["ResCode"] != 0) {
+                        $this->dispatchBrowserEvent('unblockUI');
+                        $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $json_array["ResCode"] ." ". $json_array["ResMes"]]);
+                        return null;
+                    }
+                } else {
+                    $this->dispatchBrowserEvent('unblockUI');
+                    $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: '. $removeTest->status() . ' ' .$removeTest->getReasonPhrase()]);
+                    return null;
+                }
+            }
         }
 
         //ACtion
@@ -157,6 +220,8 @@ class UpdateInfoLivewire extends Component
             }
 
             if ($this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien) {
+                $json_array = $response->json();
+
                 if (!!$this->hr->icpc1hn_account) {
                     $icpc1hn_account = $this->hr->icpc1hn_account;
 
