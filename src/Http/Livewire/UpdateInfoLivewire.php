@@ -38,9 +38,9 @@ class UpdateInfoLivewire extends Component
     protected function rules() {
         return [
             'mail' => 'nullable|array',
-            'mail.*' => 'nullable|email:rfc,dns',
-            'mail.noibo' => 'nullable|email:rfc,dns|ends_with:@cpc1hn.com.vn,@cpc1hn.vn',
-            'mail.canhan' => 'required|email:rfc,dns',
+            'mail.*' => 'nullable|email:rfc',
+            'mail.noibo' => 'nullable|email:rfc|ends_with:@cpc1hn.com.vn,@cpc1hn.vn',
+            'mail.canhan' => 'required|email:rfc',
             'icpc1hn_taikhoan' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
             'icpc1hn_matkhau' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
         ];
@@ -125,9 +125,9 @@ class UpdateInfoLivewire extends Component
         $this->dispatchBrowserEvent('unblockUI');
         $this->validate([
             'mail' => 'nullable|array',
-            'mail.*' => 'nullable|email:rfc,dns',
-            'mail.noibo' => 'nullable|email:rfc,dns|ends_with:@cpc1hn.com.vn,@cpc1hn.vn',
-            'mail.canhan' => 'required|email:rfc,dns',
+            'mail.*' => 'nullable|email:rfc',
+            'mail.noibo' => 'nullable|email:rfc|ends_with:@cpc1hn.com.vn,@cpc1hn.vn',
+            'mail.canhan' => 'required|email:rfc',
             'icpc1hn_taikhoan' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
             'icpc1hn_matkhau' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
         ]);
