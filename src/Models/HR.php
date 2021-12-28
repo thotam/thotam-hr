@@ -14,6 +14,7 @@ use Thotam\ThotamMktKpi\Traits\HasMktKpiTrait;
 use Thotam\ThotamMkt\Traits\HasMktSubTeamTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Thotam\ThotamCpc1hnDaotao\Traits\HasDaoTaoTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Thotam\ThotamHoithaoEtc\Traits\HasHoithaoEtcTraits;
 use Thotam\ThotamIcpc1hnApi\Traits\Has_iCPC1HN_Account_Trait;
@@ -33,6 +34,7 @@ class HR extends Model implements AuthorizableContract
     use HasMktKpiTrait;
     use HasKbytTrait;
     use HasHoithaoEtcTraits;
+    use HasDaoTaoTrait;
 
     /**
      * The attributes that are mass assignable.
