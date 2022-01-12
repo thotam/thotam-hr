@@ -31,6 +31,12 @@ class CheckInfo
                 'msg' => 'Vui lòng cập nhật Tài khoản sổ tay để tiếp tục',
                 'reload' => true
                 ]);
+        } elseif (($hr->is_kd_quanly || $hr->is_kd_thanhvien) && !(bool)optional($hr->nhom_san_phams)->count()) {
+            return response()->view('thotam-hr::auth.update-more-info',[
+                'title' => 'Thông tin cá nhân',
+                'msg' => 'Vui lòng cập nhật Nhóm sản phẩm để tiếp tục',
+                'reload' => true
+                ]);
         } else {
             return $next($request);
         }

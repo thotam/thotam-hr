@@ -109,6 +109,59 @@
         </div>
     @endif
 
+    @if ($hr->is_kd_quanly || $hr->is_kd_thanhvien)
+
+    <div class="col-12">
+        <h1 class="text-center font-weight-bolder pt-3 mb-3">
+            Thông tin Nhóm sản phẩm
+        </h1>
+
+        <div class="row px-3">
+
+            <div class="col-12 bg-light">
+                <div class="form-group mb-1 mt-1 text-google">
+                    <b>Nhóm sản phẩm:</b>
+                </div>
+
+                <div class="row px-3">
+
+                    @foreach ($nhom_sp_arrays as $nhom_sp_array)
+                        @if (!!$nhom_sp_array['nhom_san_phams'])
+                            <div class="col-12">
+                                <div class="form-group mb-1">
+                                    <label class="col-form-label mb-1 text-indigo">{{ $nhom_sp_array['name'] }}:</label>
+                                    <div class="row">
+
+                                        @foreach ($nhom_sp_array['nhom_san_phams'] as $nhom_san_pham)
+                                            <label class="form-check col-md-6 col-12 mb-1">
+                                                <input class="form-check-input ml-0 mt-1" wire:model="nhom_san_phams.{{ $nhom_san_pham['id'] }}" type="checkbox" value="{{ $nhom_san_pham['id'] }}">
+                                                <span class="form-check-label ml-4">{{ $nhom_san_pham['name'] }}</span>
+                                            </label>
+                                        @endforeach
+
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+
+                </div>
+
+                @error('nhom_san_phams')
+                    <label class="pl-1 small invalid-feedback d-inline-block" ><i class="fas mr-1 fa-exclamation-circle"></i>{{ $message }}</label>
+                @enderror
+                @error('nhom_san_phams.*')
+                    <label class="pl-1 small invalid-feedback d-inline-block" ><i class="fas mr-1 fa-exclamation-circle"></i>{{ $message }}</label>
+                @enderror
+
+            </div>
+
+        </div>
+    </div>
+
+
+    @endif
+
     <div class="text-right mt-4">
         <button wire:click.prevent="save_info({{ isset($reload) }})" thotam-blockui wire:loading.attr="disabled" class="btn btn-primary">Lưu</button>
     </div>

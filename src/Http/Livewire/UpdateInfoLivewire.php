@@ -5,9 +5,12 @@ namespace Thotam\ThotamHr\Http\Livewire;
 use Auth;
 use Carbon\Carbon;
 use Livewire\Component;
+use Illuminate\Support\Str;
+use Thotam\ThotamTeam\Models\Nhom;
 use Illuminate\Support\Facades\Redirect;
 use Thotam\ThotamIcpc1hnApi\Models\iCPC1HN_Account;
 use Thotam\ThotamIcpc1hnApi\Traits\Login\LoginTrait;
+use Thotam\ThotamCpc1hnDaotao\Models\QuanLy\HrMustDaoTaoSanPham;
 
 class UpdateInfoLivewire extends Component
 {
@@ -20,6 +23,7 @@ class UpdateInfoLivewire extends Component
     */
     public $hr, $reload;
     public $icpc1hn_taikhoan, $icpc1hn_matkhau;
+    public $nhom_sp_arrays = [], $nhom_san_phams;
 
     public $mail = [];
 
@@ -41,8 +45,10 @@ class UpdateInfoLivewire extends Component
             'mail.*' => 'nullable|email:rfc',
             'mail.noibo' => 'nullable|email:rfc|ends_with:@cpc1hn.com.vn,@cpc1hn.vn',
             'mail.canhan' => 'required|email:rfc',
-            'icpc1hn_taikhoan' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
-            'icpc1hn_matkhau' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
+            'icpc1hn_taikhoan' => ($this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable") . "|string",
+            'icpc1hn_matkhau' => ($this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable") . "|string",
+            'nhom_san_phams' => ($this->hr->is_kd_quanly || $this->hr->is_kd_thanhvien ? "required" : "nullable") . "|array",
+            'nhom_san_phams.*' => ($this->hr->is_kd_quanly || $this->hr->is_kd_thanhvien ? "required" : "nullable") . "|exists:nhom_san_phams,id",
         ];
     }
 
@@ -58,6 +64,8 @@ class UpdateInfoLivewire extends Component
         'mail.canhan' => 'email cá nhân',
         'icpc1hn_taikhoan' => 'tài khoản sổ tay',
         'icpc1hn_matkhau' => 'mật khẩu sổ tay',
+        'nhom_san_phams' => "nhóm sản phẩm",
+        'nhom_san_phams.*' => "nhóm sản phẩm",
     ];
 
     /**
@@ -82,7 +90,6 @@ class UpdateInfoLivewire extends Component
         $this->dispatchBrowserEvent('dynamic_update');
     }
 
-
     /**
      * On updated action
      *
@@ -91,7 +98,11 @@ class UpdateInfoLivewire extends Component
      */
     public function updated($propertyName)
     {
-        $this->validateOnly($propertyName);
+        if (Str::startsWith($propertyName, 'nhom_san_phams')) {
+            $this->nhom_san_phams = array_filter($this->nhom_san_phams);
+        } else {
+            $this->validateOnly($propertyName);
+        }
     }
 
     public function render()
@@ -111,6 +122,9 @@ class UpdateInfoLivewire extends Component
         $this->mail = $this->hr->mails->whereNotNull('tag')->pluck('mail', 'tag')->toArray();
         $this->icpc1hn_taikhoan = optional($this->hr->icpc1hn_account)->account;
         $this->icpc1hn_matkhau = optional($this->hr->icpc1hn_account)->password;
+        $this->nhom_san_phams = $this->hr->nhom_san_phams->pluck('id', 'id')->toArray();
+        $nhom = $this->hr->thanhvien_of_nhoms->merge($this->hr->thanhvien_of_nhoms)->where('phan_loai_id', 3);
+        $this->nhom_sp_arrays = Nhom::whereIn('id', $nhom)->orderBy('kenh_kinh_doanh_id')->with('kenh_kinh_doanh.nhom_san_phams')->get()->pluck('kenh_kinh_doanh')->unique()->toArray();
     }
 
     /**
@@ -128,8 +142,10 @@ class UpdateInfoLivewire extends Component
             'mail.*' => 'nullable|email:rfc',
             'mail.noibo' => 'nullable|email:rfc|ends_with:@cpc1hn.com.vn,@cpc1hn.vn',
             'mail.canhan' => 'required|email:rfc',
-            'icpc1hn_taikhoan' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
-            'icpc1hn_matkhau' => $this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable" . "|string",
+            'icpc1hn_taikhoan' => ($this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable") . "|string",
+            'icpc1hn_matkhau' => ($this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable") . "|string",
+            'nhom_san_phams' => ($this->hr->is_kd_quanly || $this->hr->is_kd_thanhvien ? "required" : "nullable") . "|array",
+            'nhom_san_phams.*' => ($this->hr->is_kd_quanly || $this->hr->is_kd_thanhvien ? "required" : "nullable") . "|exists:nhom_san_phams,id",
         ]);
         $this->dispatchBrowserEvent('blockUI');
 
@@ -217,6 +233,16 @@ class UpdateInfoLivewire extends Component
         try {
             foreach ($this->mail as $key => $value) {
                 $this->hr->updateMail($value, $key);
+            }
+
+            $this->hr->nhom_san_phams()->sync($this->nhom_san_phams);
+            if ($this->hr->is_kd_quanly || $this->hr->is_kd_thanhvien) {
+                if (!(bool)$this->hr->must_daotao_sanpham) {
+                    $must_daotao_sanpham = new HrMustDaoTaoSanPham;
+                    $this->hr->must_daotao_sanpham()->save($must_daotao_sanpham);
+                }
+            } else {
+                $this->hr->must_daotao_sanpham()->delete();
             }
 
             if ($this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien) {
