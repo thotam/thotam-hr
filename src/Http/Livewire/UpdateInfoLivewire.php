@@ -123,8 +123,8 @@ class UpdateInfoLivewire extends Component
         $this->icpc1hn_taikhoan = optional($this->hr->icpc1hn_account)->account;
         $this->icpc1hn_matkhau = optional($this->hr->icpc1hn_account)->password;
         $this->nhom_san_phams = $this->hr->nhom_san_phams->pluck('id', 'id')->toArray();
-        $nhom = $this->hr->thanhvien_of_nhoms->merge($this->hr->thanhvien_of_nhoms)->where('phan_loai_id', 3);
-        $this->nhom_sp_arrays = Nhom::whereIn('id', $nhom)->orderBy('kenh_kinh_doanh_id')->with('kenh_kinh_doanh.nhom_san_phams')->get()->pluck('kenh_kinh_doanh')->unique()->toArray();
+        $nhom = $this->hr->thanhvien_of_nhoms->merge($this->hr->quanly_of_nhoms)->where('phan_loai_id', 3)->pluck('id')->toArray();
+        $this->nhom_sp_arrays = array_filter(Nhom::whereIn('id', $nhom)->orderBy('kenh_kinh_doanh_id')->with('kenh_kinh_doanh.nhom_san_phams')->get()->pluck('kenh_kinh_doanh')->unique()->toArray());
     }
 
     /**
