@@ -242,7 +242,7 @@ class HrLivewire extends Component
         try {
             if ($this->addStatus) {
                 $hr = HR::create([
-                    "key" => $this->key,
+                    "key" => trim($this->key),
                     "hoten" => $this->hoten,
                     "ten" => $this->ten,
                     "ngaysinh" => $this->ngaysinh,
@@ -254,7 +254,7 @@ class HrLivewire extends Component
             } elseif ($this->editStatus) {
                 if ($this->key == $this->old_key) {
                     $this->new_hr->update([
-                        "key" => $this->key,
+                        "key" => trim($this->key),
                         "hoten" => $this->hoten,
                         "ten" => $this->ten,
                         "ngaysinh" => $this->ngaysinh,
@@ -269,7 +269,7 @@ class HrLivewire extends Component
                     $this->new_hr->syncRoles([]);
 
                     $this->new_hr->update([
-                        "key" => $this->key,
+                        "key" => trim($this->key),
                         "hoten" => $this->hoten,
                         "ten" => $this->ten,
                         "ngaysinh" => $this->ngaysinh,
