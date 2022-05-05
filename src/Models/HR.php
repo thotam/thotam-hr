@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Thotam\ThotamHr\Traits\HasMailTrait;
 use Thotam\ThotamKbyt\Traits\HasKbytTrait;
 use Thotam\ThotamTeam\Traits\HasNhomTrait;
+use Thotam\ThotamPlus\Traits\ChiNhanhTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Thotam\ThotamMktKpi\Traits\HasMktKpiTrait;
 use Thotam\ThotamMkt\Traits\HasMktSubTeamTrait;
@@ -22,81 +23,82 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
 class HR extends Model implements AuthorizableContract
 {
-    use HasFactory;
-    use SoftDeletes;
-    use Userstamps;
-    use HasRoles;
-    use Authorizable;
-    use HasNhomTrait;
-    use HasMailTrait;
-    use HasMktSubTeamTrait;
-    use Has_iCPC1HN_Account_Trait;
-    use HasMktKpiTrait;
-    use HasKbytTrait;
-    use HasHoithaoEtcTraits;
-    use HasDaoTaoTrait;
+	use HasFactory;
+	use SoftDeletes;
+	use Userstamps;
+	use HasRoles;
+	use Authorizable;
+	use HasNhomTrait;
+	use HasMailTrait;
+	use HasMktSubTeamTrait;
+	use Has_iCPC1HN_Account_Trait;
+	use HasMktKpiTrait;
+	use HasKbytTrait;
+	use HasHoithaoEtcTraits;
+	use HasDaoTaoTrait;
+	use ChiNhanhTrait;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'key', 'hoten', 'ten', 'ngaysinh', 'ngaythuviec', 'active', 'sync',
-    ];
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+		'key', 'hoten', 'ten', 'ngaysinh', 'ngaythuviec', 'active', 'sync',
+	];
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'hrs';
+	/**
+	 * The table associated with the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'hrs';
 
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'key';
+	/**
+	 * The primary key associated with the table.
+	 *
+	 * @var string
+	 */
+	protected $primaryKey = 'key';
 
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
+	/**
+	 * Indicates if the IDs are auto-incrementing.
+	 *
+	 * @var bool
+	 */
+	public $incrementing = false;
 
-    /**
-     * The "type" of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
+	/**
+	 * The "type" of the auto-incrementing ID.
+	 *
+	 * @var string
+	 */
+	protected $keyType = 'string';
 
-    /**
-     * guard_name
-     *
-     * @var string
-     */
-    protected $guard_name = 'web';
+	/**
+	 * guard_name
+	 *
+	 * @var string
+	 */
+	protected $guard_name = 'web';
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'ngaysinh' => 'datetime',
-        'ngaythuviec' => 'datetime',
-    ];
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'ngaysinh' => 'datetime',
+		'ngaythuviec' => 'datetime',
+	];
 
-    /**
-     * Get all of the users for the HR
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function users(): HasMany
-    {
-        return $this->hasMany(User::class, 'hr_key', 'key');
-    }
+	/**
+	 * Get all of the users for the HR
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function users(): HasMany
+	{
+		return $this->hasMany(User::class, 'hr_key', 'key');
+	}
 }
