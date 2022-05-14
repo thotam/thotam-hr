@@ -14,7 +14,7 @@ class CreateHrsTable extends Migration
     public function up()
     {
         Schema::create('hrs', function (Blueprint $table) {
-            $table->string('key', 10);
+            $table->string('key', 20);
             $table->string('hoten', 255);
             $table->string('ten', 100);
             $table->dateTime('ngaysinh')->nullable()->default(null);
