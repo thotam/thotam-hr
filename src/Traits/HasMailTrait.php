@@ -5,7 +5,8 @@ namespace Thotam\ThotamHr\Traits;
 use Thotam\ThotamHr\Models\MailHR;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-trait HasMailTrait {
+trait HasMailTrait
+{
 
     /**
      * Get all of the mails for the HR
@@ -64,6 +65,32 @@ trait HasMailTrait {
     }
 
     /**
+     * getMailLuanChuyen
+     *
+     * @param  mixed $tag
+     * @return void
+     */
+    public function getMailLuanChuyen()
+    {
+        $mail = $this->mails()->latest()->where("tag", 'luanchuyen-phieu');
+
+        $email = $mail->first();
+        if (!!$email) {
+            return $email;
+        }
+
+        $mail_nb = $this->getMailNoiBo();
+        if (!!$mail_nb) {
+            return $mail_nb;
+        }
+
+        $mail_cn = $this->getMailCaNhan();
+        if (!!$mail_cn) {
+            return $mail_cn;
+        }
+    }
+
+    /**
      * updateMail
      *
      * @param  mixed $mail
@@ -102,5 +129,4 @@ trait HasMailTrait {
         $this->updateMail($mail, $tag);
         return $this->getMail($tag);
     }
-
 }
