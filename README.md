@@ -36,6 +36,14 @@ Add 'CheckHr' => Thotam\ThotamHr\Http\Middleware\CheckHR::Class To App\Http\Kern
 Add 'CheckInfo' => Thotam\ThotamHr\Http\Middleware\CheckInfo::Class To App\Http\Kernel.php in $routeMiddleware
 ```
 
+### Add this to .env
+
+```php
+DropboxAppkey=""
+DropboxAppsecret=""
+DropboxRefreshToken=""
+```
+
 #### Next, you should migrate your database:
 
 ```php
