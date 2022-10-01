@@ -9,6 +9,7 @@ use Thotam\ThotamHr\Http\Livewire\HrLivewire;
 use Thotam\ThotamHr\Http\Livewire\UpdateHrLivewire;
 use Thotam\ThotamHr\Console\Commands\HR_Sync_Command;
 use Thotam\ThotamHr\Http\Livewire\UpdateInfoLivewire;
+use Thotam\ThotamHr\Console\Commands\DropBoxHR_Sync_Command;
 
 class ThotamHrServiceProvider extends ServiceProvider
 {
@@ -21,15 +22,15 @@ class ThotamHrServiceProvider extends ServiceProvider
          * Optional methods to load your package assets
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'thotam-hr');
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'thotam-hr');
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'thotam-hr');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         Route::domain('beta.' . env('APP_DOMAIN', 'cpc1hn.com.vn'))->group(function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/routes.php');
+            $this->loadRoutesFrom(__DIR__ . '/../routes/routes.php');
         });
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('thotam-hr.php'),
+                __DIR__ . '/../config/config.php' => config_path('thotam-hr.php'),
             ], 'config');
 
             // Publishing the views.
@@ -50,6 +51,7 @@ class ThotamHrServiceProvider extends ServiceProvider
             // Registering package commands.
             $this->commands([
                 HR_Sync_Command::class,
+                DropBoxHR_Sync_Command::class,
             ]);
         }
 
@@ -67,7 +69,7 @@ class ThotamHrServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'thotam-hr');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'thotam-hr');
 
         // Register the main class to use with the facade
         $this->app->singleton('thotam-hr', function () {
