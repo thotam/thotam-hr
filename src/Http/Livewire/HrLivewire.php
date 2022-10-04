@@ -8,7 +8,6 @@ use Livewire\WithFileUploads;
 use Thotam\ThotamHr\Models\HR;
 use Spatie\Permission\Models\Role;
 use Thotam\ThotamTeam\Models\Nhom;
-use Thotam\ThotamHr\Jobs\HR_Sync_Job;
 use Spatie\Permission\Traits\HasRoles;
 use Thotam\ThotamHr\Imports\BfoImport;
 use Spatie\Permission\Models\Permission;
@@ -20,10 +19,10 @@ class HrLivewire extends Component
     use WithFileUploads;
 
     /**
-    * Các biến sử dụng trong Component
-    *
-    * @var mixed
-    */
+     * Các biến sử dụng trong Component
+     *
+     * @var mixed
+     */
     public $key, $hoten, $ten, $ngaysinh, $ngaythuviec, $active, $old_key, $old_hr, $new_hr, $teams;
     public $modal_title, $toastr_message;
     public $permissions, $roles, $permission_arrays, $role_arrays, $team_arrays;
@@ -74,9 +73,10 @@ class HrLivewire extends Component
      *
      * @var array
      */
-    protected function rules() {
+    protected function rules()
+    {
         return [
-            'key' => 'required|string|max:10|unique:Thotam\ThotamHr\Models\HR,key,'.$this->old_key,
+            'key' => 'required|string|max:10|unique:Thotam\ThotamHr\Models\HR,key,' . $this->old_key,
             'hoten' => 'required|string|max:255',
             'ten' => 'required|string|max:50',
             'ngaysinh' => 'nullable|date_format:d-m-Y',
@@ -230,7 +230,7 @@ class HrLivewire extends Component
 
         $this->dispatchBrowserEvent('unblockUI');
         $this->validate([
-            'key' => 'required|string|max:10|unique:Thotam\ThotamHr\Models\HR,key,'.$this->old_key,
+            'key' => 'required|string|max:10|unique:Thotam\ThotamHr\Models\HR,key,' . $this->old_key,
             'hoten' => 'required|string|max:255',
             'ten' => 'required|string|max:50',
             'ngaysinh' => 'nullable|date_format:d-m-Y',
@@ -249,8 +249,6 @@ class HrLivewire extends Component
                     "active" => true,
                     "ngaythuviec" => $this->ngaythuviec,
                 ]);
-
-                HR_Sync_Job::dispatch($hr);
             } elseif ($this->editStatus) {
                 if ($this->key == $this->old_key) {
                     $this->new_hr->update([
@@ -280,7 +278,6 @@ class HrLivewire extends Component
                     $this->new_hr->syncPermissions($old_permissions);
                     $this->new_hr->syncRoles($old_roles);
                 }
-                HR_Sync_Job::dispatch($this->new_hr);
             }
         } catch (\Illuminate\Database\QueryException $e) {
             $this->dispatchBrowserEvent('unblockUI');
@@ -513,7 +510,7 @@ class HrLivewire extends Component
 
                     HR::updateOrCreate([
                         'key' => $data["ma_nhan_su"],
-                    ],[
+                    ], [
                         'hoten' => $import_hoten,
                         'ten' => $import_ten,
                         'ngaysinh' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['ngay_sinh'])->format('d-m-Y'),
