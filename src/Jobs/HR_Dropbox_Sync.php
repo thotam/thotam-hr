@@ -38,11 +38,11 @@ class HR_Dropbox_Sync implements ShouldQueue
     public function handle()
     {
 
-        $max_mnv =  HR::where('dropbox', true)->max('key');
+        $mnvs =  HR::where('dropbox', true)->pluck('key')->toArray();
         $tokenProvider = new AutoRefreshingDropBoxTokenService();
         $client = new Client($tokenProvider);
         Storage::writeStream("HR/ImportHr/HR.xlsx", $client->download("id:bydpVjt3rGcAAAAAAABJcg"));
-        $datas = collect(Excel::toArray(new BfoDropBoxImport, "HR/ImportHr/HR.xlsx")[0])->where('ma_nv', ">", $max_mnv)->sortBy('ma_nv');
+        $datas = collect(Excel::toArray(new BfoDropBoxImport, "HR/ImportHr/HR.xlsx")[0])->whereNotIn('ma_nv', $mnvs)->whereNotNull('ma_nv')->sortBy('ma_nv');
 
         foreach ($datas as $data) {
             if (!!$data["ma_nv"] && !!$data["ho_va_ten"] && is_numeric($data['ma_nv'])) {
