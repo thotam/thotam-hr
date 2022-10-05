@@ -45,7 +45,7 @@ class HR_Dropbox_Sync implements ShouldQueue
         $datas = collect(Excel::toArray(new BfoDropBoxImport, "HR/ImportHr/HR.xlsx")[0])->whereNotIn('ma_nv', $mnvs)->whereNotNull('ma_nv')->sortBy('ma_nv');
 
         foreach ($datas as $data) {
-            if (!!$data["ma_nv"] && !!$data["ho_va_ten"] && is_numeric($data['ma_nv'])) {
+            if (!!$data["ma_nv"] && !!$data["ho_va_ten"]) {
                 $import_hoten = mb_convert_case(trim($data["ho_va_ten"]), MB_CASE_TITLE, "UTF-8");
                 $import_names = explode(' ', $import_hoten);
                 $import_ten = array_pop($import_names);
