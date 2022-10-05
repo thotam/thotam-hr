@@ -59,7 +59,7 @@ class HR_Dropbox_Sync implements ShouldQueue
                 $datas = collect($json_array["EmployeeLst"])->whereNotIn('uPharmaIDCode', $mnvs)->whereNotNull('uPharmaIDCode')->sortBy('uPharmaIDCode');
 
                 foreach ($datas as $data) {
-                    if (!!$data["uPharmaIDCode"] && !!$data["EmployeeName"] && is_numeric($data['uPharmaIDCode'])) {
+                    if (!!$data["uPharmaIDCode"] && !!$data["EmployeeName"]) {
                         $import_hoten = mb_convert_case(trim($data["EmployeeName"]), MB_CASE_TITLE, "UTF-8");
                         $import_names = explode(' ', $import_hoten);
                         $import_ten = array_pop($import_names);
