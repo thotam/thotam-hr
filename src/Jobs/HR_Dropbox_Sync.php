@@ -3,23 +3,24 @@
 namespace Thotam\ThotamHr\Jobs;
 
 use Carbon\Carbon;
-use Spatie\Dropbox\Client;
 use Illuminate\Bus\Queueable;
 use Thotam\ThotamHr\Models\HR;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\InteractsWithQueue;
+use Thotam\ThotamUpharma\Traits\JobTrait;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Thotam\ThotamHr\Imports\BfoDropBoxImport;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Thotam\ThotamHr\Service\AutoRefreshingDropBoxTokenService;
 
 class HR_Dropbox_Sync implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use JobTrait;
 
+    public $UserName, $Password;
 
     /**
      * Create a new job instance.
@@ -37,33 +38,53 @@ class HR_Dropbox_Sync implements ShouldQueue
      */
     public function handle()
     {
+        $this->UserName = config('thotam-upharma.API.User.UserName');
+        $this->Password = config('thotam-upharma.API.User.Password');
+        $__getAccount = $this->__getAccount();
+        $this->Token = $__getAccount['Token'];
+        $this->uPharmaID = $__getAccount['UserInfo']['uPharmaID'];
 
         $mnvs =  HR::where('dropbox', true)->pluck('key')->toArray();
-        $tokenProvider = new AutoRefreshingDropBoxTokenService();
-        $client = new Client($tokenProvider);
-        Storage::writeStream("HR/ImportHr/HR.xlsx", $client->download("id:bydpVjt3rGcAAAAAAABJcg"));
-        $datas = collect(Excel::toArray(new BfoDropBoxImport, "HR/ImportHr/HR.xlsx")[0])->whereNotIn('ma_nv', $mnvs)->whereNotNull('ma_nv')->sortBy('ma_nv');
 
-        foreach ($datas as $data) {
-            if (!!$data["ma_nv"] && !!$data["ho_va_ten"] && is_numeric($data['ma_nv'])) {
-                $import_hoten = mb_convert_case(trim($data["ho_va_ten"]), MB_CASE_TITLE, "UTF-8");
-                $import_names = explode(' ', $import_hoten);
-                $import_ten = array_pop($import_names);
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post(config('thotam-upharma.API.Employee.GetEmployeeInfoLst'), [
+            "uPharmaID" => $this->uPharmaID,
+            "Token" => $this->Token,
+        ]);
 
-                HR::updateOrCreate([
-                    'key' => $data["ma_nv"],
-                ], [
-                    'hoten' => $import_hoten,
-                    'ten' => $import_ten,
-                    'ngaysinh' => !!$data['ngay_thang_nam_sinh'] ? (is_numeric($data['ngay_thang_nam_sinh']) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['ngay_thang_nam_sinh'])->format('d-m-Y') : Carbon::parse(str_replace("/", "-", $data['ngay_thang_nam_sinh']))->format('d-m-Y')) : null,
-                    'ngaythuviec' => !!$data['ngay_vao'] ? (is_numeric($data['ngay_vao']) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['ngay_vao'])->format('d-m-Y') : Carbon::parse(str_replace("/", "-", $data['ngay_vao']))->format('d-m-Y')) : null,
-                    'active' => true,
-                    'dropbox' => true,
-                    'sync' => false,
-                ]);
+        if ($response->status() == 200) {
+            $json_array = $response->json();
+            if ($json_array["RespCode"] == 0) {
+                $datas = collect($json_array["EmployeeLst"])->whereNotIn('uPharmaIDCode', $mnvs)->whereNotNull('uPharmaIDCode')->sortBy('uPharmaIDCode');
+
+                foreach ($datas as $data) {
+                    if (!!$data["uPharmaIDCode"] && !!$data["EmployeeName"] && is_numeric($data['uPharmaIDCode'])) {
+                        $import_hoten = mb_convert_case(trim($data["EmployeeName"]), MB_CASE_TITLE, "UTF-8");
+                        $import_names = explode(' ', $import_hoten);
+                        $import_ten = array_pop($import_names);
+
+                        HR::updateOrCreate([
+                            'key' => $data["uPharmaIDCode"],
+                        ], [
+                            'hoten' => $import_hoten,
+                            'ten' => $import_ten,
+                            'ngaysinh' => !!$data['BirthDay'] ? (is_numeric($data['BirthDay']) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['BirthDay'])->format('d-m-Y') : Carbon::parse(str_replace("/", "-", $data['BirthDay']))->format('d-m-Y')) : null,
+                            'ngaythuviec' => !!$data['TranningTimeStart'] ? (is_numeric($data['TranningTimeStart']) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['TranningTimeStart'])->format('d-m-Y') : Carbon::parse(str_replace("/", "-", $data['TranningTimeStart']))->format('d-m-Y')) : null,
+                            'active' => true,
+                            'dropbox' => true,
+                            'sync' => false,
+                            'phone' => !!$data["Phone"] ? $data["Phone"] : null,
+                        ]);
+                    } else {
+                        break;
+                    }
+                }
             } else {
-                break;
+                throw new \Exception(get_class($this) . ': __fetchData - ' .  $json_array["RespCode"] . " " . $json_array["RespText"]);
             }
+        } else {
+            throw new \Exception(get_class($this) . ': Unexpected HTTP status: __fetchData - ' .  $response->status() . ' - ' . $response->getReasonPhrase());
         }
     }
 }
