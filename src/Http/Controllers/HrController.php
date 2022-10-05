@@ -15,7 +15,6 @@ class HrController extends Controller
      */
     public function index(AdminHrDataTable $dataTable)
     {
-        \Thotam\ThotamHr\Jobs\HR_Dropbox_Sync::dispatchSync();
         if (Auth::user()->hr->hasAnyPermission(["view-hr", "add-hr", "edit-hr", "delete-hr", "set-team-hr", "set-permission-hr"])) {
             return $dataTable->render('thotam-hr::hr', ['title' => 'Quản lý Nhân sự']);
         } else {
