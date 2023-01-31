@@ -60,7 +60,7 @@ class HR_Dropbox_Sync implements ShouldQueue
                     'active' => true,
                     'dropbox' => true,
                     'sync' => false,
-                    'phone' => !!$data["dien_thoai_lien_he"] ? $data["dien_thoai_lien_he"] : null,
+                    // 'phone' => !!$data["dien_thoai_lien_he"] ? $data["dien_thoai_lien_he"] : null,
                 ]);
             } else {
                 break;
