@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Thotam\ThotamCpc1hnDaotao\Traits\HasDaoTaoTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Thotam\Cpc1hnTrainghiem\Traits\HasTrainghiemTraits;
 use Thotam\ThotamHoithaoEtc\Traits\HasHoithaoEtcTraits;
 use Thotam\ThotamIcpc1hnApi\Traits\Has_iCPC1HN_Account_Trait;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -37,6 +38,7 @@ class HR extends Model implements AuthorizableContract
     use HasHoithaoEtcTraits;
     use HasDaoTaoTrait;
     use ChiNhanhTrait;
+    use HasTrainghiemTraits;
 
     /**
      * The attributes that are mass assignable.
