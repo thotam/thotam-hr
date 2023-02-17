@@ -50,14 +50,17 @@ trait HasMailTrait
      * getMail
      *
      * @param  mixed $tag
+     * @param  mixed $tag2
      * @return void
      */
-    public function getMail($tag = null)
+    public function getMail($tag = null, $tag2 = null)
     {
         $mail = $this->mails()->latest();
 
         if (!!$tag) {
             $mail->where("tag", $tag);
+        } elseif (!!$tag2) {
+            $mail->where("tag", $tag2);
         }
 
         $email = $mail->first();
