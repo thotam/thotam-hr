@@ -8,158 +8,161 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 trait HasMailTrait
 {
 
-    /**
-     * Get all of the mails for the HR
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function mails(): HasMany
-    {
-        return $this->hasMany(MailHR::class, 'hr_key', 'key');
-    }
+	/**
+	 * Get all of the mails for the HR
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function mails(): HasMany
+	{
+		return $this->hasMany(MailHR::class, 'hr_key', 'key');
+	}
 
-    /**
-     * getMailNoiBo
-     *
-     * @param  mixed $tag
-     * @return void
-     */
-    public function getMailNoiBo()
-    {
-        $mail = $this->mails()->latest()->where("tag", 'noibo');
+	/**
+	 * getMailNoiBo
+	 *
+	 * @param  mixed $tag
+	 * @return void
+	 */
+	public function getMailNoiBo()
+	{
+		$mail = $this->mails()->latest()->where("tag", 'noibo');
 
-        $email = $mail->first();
-        return !!$email ? $email->mail : NULL;
-    }
+		$email = $mail->first();
+		return !!$email ? $email->mail : NULL;
+	}
 
-    /**
-     * getMailCaNhan
-     *
-     * @param  mixed $tag
-     * @return void
-     */
-    public function getMailCaNhan()
-    {
-        $mail = $this->mails()->latest()->where("tag", 'canhan');
+	/**
+	 * getMailCaNhan
+	 *
+	 * @param  mixed $tag
+	 * @return void
+	 */
+	public function getMailCaNhan()
+	{
+		$mail = $this->mails()->latest()->where("tag", 'canhan');
 
-        $email = $mail->first();
-        return !!$email ? $email->mail : NULL;
-    }
+		$email = $mail->first();
+		return !!$email ? $email->mail : NULL;
+	}
 
-    /**
-     * getMail
-     *
-     * @param  mixed $tag
-     * @param  mixed $tag2
-     * @return void
-     */
-    public function getMail($tag = null, $tag2 = null)
-    {
-        $mail = $this->mails()->latest();
+	/**
+	 * getMail
+	 *
+	 * @param  mixed $tag
+	 * @param  mixed $tag2
+	 * @return void
+	 */
+	public function getMail($tag = null, $tag2 = null)
+	{
+		$mail = $this->mails()->latest();
 
-        if (!!$tag) {
-            $mail->where("tag", $tag);
-        } elseif (!!$tag2) {
-            $mail->where("tag", $tag2);
-        }
+		if (!!$tag) {
+			$mail->where("tag", $tag);
+		}
 
-        $email = $mail->first();
-        return !!$email ? $email->mail : $this->getMailCaNhan();
-    }
+		if (!(bool)$mail->first() && !!$tag2) {
+			$mail = $this->mails()->latest();
+			$mail->where("tag", $tag2);
+		}
 
-    /**
-     * getMailLuanChuyen
-     *
-     * @param  mixed $tag
-     * @return void
-     */
-    public function getMailLuanChuyen()
-    {
-        $mail = $this->mails()->latest()->where("tag", 'luanchuyen-phieu');
+		$email = $mail->first();
+		return !!$email ? $email->mail : $this->getMailCaNhan();
+	}
 
-        $email = $mail->first();
-        if (!!$email) {
-            return $email->mail;
-        }
+	/**
+	 * getMailLuanChuyen
+	 *
+	 * @param  mixed $tag
+	 * @return void
+	 */
+	public function getMailLuanChuyen()
+	{
+		$mail = $this->mails()->latest()->where("tag", 'luanchuyen-phieu');
 
-        $mail_nb = $this->getMailNoiBo();
-        if (!!$mail_nb) {
-            return $mail_nb;
-        }
+		$email = $mail->first();
+		if (!!$email) {
+			return $email->mail;
+		}
 
-        $mail_cn = $this->getMailCaNhan();
-        if (!!$mail_cn) {
-            return $mail_cn;
-        }
-    }
+		$mail_nb = $this->getMailNoiBo();
+		if (!!$mail_nb) {
+			return $mail_nb;
+		}
 
-    /**
-     * updateMail
-     *
-     * @param  mixed $mail
-     * @param  mixed $tag
-     * @return void
-     */
-    public function updateMail(string $mail, string $tag = null)
-    {
-        $mails = $this->mails()->latest();
+		$mail_cn = $this->getMailCaNhan();
+		if (!!$mail_cn) {
+			return $mail_cn;
+		}
+	}
 
-        if (!!$tag) {
-            $mails->where("tag", $tag);
-        }
+	/**
+	 * updateMail
+	 *
+	 * @param  mixed $mail
+	 * @param  mixed $tag
+	 * @return void
+	 */
+	public function updateMail(string $mail, string $tag = null)
+	{
+		$mails = $this->mails()->latest();
 
-        $email = $mails->first();
+		if (!!$tag) {
+			$mails->where("tag", $tag);
+		}
 
-        if (!!$email) {
-            $email->update(['mail' => trim($mail)]);
-        } else {
-            $email = new MailHR;
-            $email->mail = trim($mail);
-            $email->tag = $tag;
-            $this->mails()->save($email);
-        }
-    }
+		$email = $mails->first();
 
-    /**
-     * checkAndGetMail
-     *
-     * @param  mixed $mail
-     * @param  mixed $tag
-     * @return void
-     */
-    public function checkAndGetMail(string $mail, string $tag = null)
-    {
-        $this->updateMail($mail, $tag);
-        return $this->getMail($tag);
-    }
+		if (!!$email) {
+			$email->update(['mail' => trim($mail)]);
+		} else {
+			$email = new MailHR;
+			$email->mail = trim($mail);
+			$email->tag = $tag;
+			$this->mails()->save($email);
+		}
+	}
 
-    /**
-     * getMailFallback
-     *
-     * @param  mixed $tag
-     * @return void
-     */
-    public function getMailFallback($tag = null)
-    {
-        $mail = $this->mails()->latest();
+	/**
+	 * checkAndGetMail
+	 *
+	 * @param  mixed $mail
+	 * @param  mixed $tag
+	 * @return void
+	 */
+	public function checkAndGetMail(string $mail, string $tag = null)
+	{
+		$this->updateMail($mail, $tag);
+		return $this->getMail($tag);
+	}
 
-        if (!!$tag) {
-            $mail->where("tag", $tag);
-        }
+	/**
+	 * getMailFallback
+	 *
+	 * @param  mixed $tag
+	 * @return void
+	 */
+	public function getMailFallback($tag = null)
+	{
+		$mail = $this->mails()->latest();
 
-        $email = $mail->first();
-        if (!!$email) {
-            return $email->mail;
-        }
+		if (!!$tag) {
+			$mail->where("tag", $tag);
+		}
 
-        $mail_nb = $this->getMailNoiBo();
-        if (!!$mail_nb) {
-            return $mail_nb;
-        }
+		$email = $mail->first();
+		if (!!$email) {
+			return $email->mail;
+		}
 
-        $mail_cn = $this->getMailCaNhan();
-        if (!!$mail_cn) {
-            return $mail_cn;
-        }
-    }
+		$mail_nb = $this->getMailNoiBo();
+		if (!!$mail_nb) {
+			return $mail_nb;
+		}
+
+		$mail_cn = $this->getMailCaNhan();
+		if (!!$mail_cn) {
+			return $mail_cn;
+		}
+	}
 }
