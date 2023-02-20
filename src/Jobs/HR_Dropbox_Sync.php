@@ -41,7 +41,7 @@ class HR_Dropbox_Sync implements ShouldQueue
         $mnvs =  HR::where('dropbox', true)->pluck('key')->toArray();
         $tokenProvider = new AutoRefreshingDropBoxTokenService();
         $client = new Client($tokenProvider);
-        Storage::writeStream("HR/ImportHr/HR.xlsx", $client->download("id:bydpVjt3rGcAAAAAAABJcg"));
+        Storage::writeStream("HR/ImportHr/HR.xlsx", $client->download("id:bydpVjt3rGcAAAAAAABhHQ"));
         $datas = collect(Excel::toArray(new BfoDropBoxImport, "HR/ImportHr/HR.xlsx")[0])->whereNotIn('ma_nv', $mnvs)->whereNotNull('ma_nv')->sortBy('ma_nv');
 
         foreach ($datas as $data) {
