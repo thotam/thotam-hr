@@ -3,6 +3,7 @@
 namespace Thotam\ThotamHr\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class DropBoxHR_Sync_Command extends Command
 {
@@ -37,7 +38,10 @@ class DropBoxHR_Sync_Command extends Command
      */
     public function handle()
     {
-        \Thotam\ThotamHr\Jobs\HR_Dropbox_Sync::dispatch();
+        $check = DB::table('jobs')->where('payload', 'like', '%HR_Dropbox_Sync%')->count();
+        if ($check <= 0) {
+            \Thotam\ThotamHr\Jobs\HR_Dropbox_Sync::dispatch();
+        }
         return 0;
     }
 }

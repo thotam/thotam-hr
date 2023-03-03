@@ -46,22 +46,24 @@ class HR_Dropbox_Sync implements ShouldQueue
 
         foreach ($datas as $data) {
             if (!!$data["ma_nv"] && !!$data["ho_va_ten"]) {
-                $import_hoten = mb_convert_case(trim($data["ho_va_ten"]), MB_CASE_TITLE, "UTF-8");
-                $import_names = explode(' ', $import_hoten);
-                $import_ten = array_pop($import_names);
+                if ($data['ma_nv'] != '#N/A' && $data['ho_va_ten'] != '#N/A') {
+                    $import_hoten = mb_convert_case(trim($data["ho_va_ten"]), MB_CASE_TITLE, "UTF-8");
+                    $import_names = explode(' ', $import_hoten);
+                    $import_ten = array_pop($import_names);
 
-                HR::updateOrCreate([
-                    'key' => $data["ma_nv"],
-                ], [
-                    'hoten' => $import_hoten,
-                    'ten' => $import_ten,
-                    'ngaysinh' => !!$data['ngay_thang_nam_sinh'] ? (is_numeric($data['ngay_thang_nam_sinh']) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['ngay_thang_nam_sinh'])->format('d-m-Y') : Carbon::parse(str_replace("/", "-", $data['ngay_thang_nam_sinh']))->format('d-m-Y')) : null,
-                    'ngaythuviec' => !!$data['ngay_vao'] ? (is_numeric($data['ngay_vao']) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['ngay_vao'])->format('d-m-Y') : Carbon::parse(str_replace("/", "-", $data['ngay_vao']))->format('d-m-Y')) : null,
-                    'active' => true,
-                    'dropbox' => true,
-                    'sync' => false,
-                    // 'phone' => !!$data["dien_thoai_lien_he"] ? $data["dien_thoai_lien_he"] : null,
-                ]);
+                    HR::updateOrCreate([
+                        'key' => $data["ma_nv"],
+                    ], [
+                        'hoten' => $import_hoten,
+                        'ten' => $import_ten,
+                        'ngaysinh' => (!!$data['ngay_thang_nam_sinh'] && $data['ngay_thang_nam_sinh'] != '#N/A') ? (is_numeric($data['ngay_thang_nam_sinh']) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['ngay_thang_nam_sinh'])->format('d-m-Y') : Carbon::parse(str_replace("/", "-", $data['ngay_thang_nam_sinh']))->format('d-m-Y')) : null,
+                        'ngaythuviec' => (!!$data['ngay_vao'] && $data['ngay_vao'] != '#N/A') ? (is_numeric($data['ngay_vao']) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data['ngay_vao'])->format('d-m-Y') : Carbon::parse(str_replace("/", "-", $data['ngay_vao']))->format('d-m-Y')) : null,
+                        'active' => true,
+                        'dropbox' => true,
+                        'sync' => false,
+                        // 'phone' => !!$data["dien_thoai_lien_he"] ? $data["dien_thoai_lien_he"] : null,
+                    ]);
+                }
             } else {
                 break;
             }
