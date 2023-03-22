@@ -40,6 +40,7 @@ class HR extends Model implements AuthorizableContract
     use ChiNhanhTrait;
     use HasTrainghiemTraits;
     use \Thotam\Cpc1hnCheckCam\Traits\HrHasCheckCamTraits;
+    use \Thotam\Cpc1hnZalo\Traits\HasZaloTraits;
 
     /**
      * The attributes that are mass assignable.

@@ -20,23 +20,29 @@ class CheckInfo
         $hr = optional(optional(Auth::user())->hr);
 
         if (!!!$hr->getMail('canhan')) {
-            return response()->view('thotam-hr::auth.update-more-info',[
+            return response()->view('thotam-hr::auth.update-more-info', [
                 'title' => 'Thông tin cá nhân',
                 'msg' => 'Vui lòng cập nhật Email để tiếp tục',
                 'reload' => true
-                ]);
+            ]);
         } elseif (($hr->is_mkt_quanly || $hr->is_mkt_thanhvien) && !!!optional($hr->icpc1hn_account)->count()) {
-            return response()->view('thotam-hr::auth.update-more-info',[
+            return response()->view('thotam-hr::auth.update-more-info', [
                 'title' => 'Thông tin cá nhân',
                 'msg' => 'Vui lòng cập nhật Tài khoản sổ tay để tiếp tục',
                 'reload' => true
-                ]);
+            ]);
         } elseif (($hr->is_kd_quanly || $hr->is_kd_thanhvien) && !(bool)optional($hr->nhom_san_phams)->count()) {
-            return response()->view('thotam-hr::auth.update-more-info',[
+            return response()->view('thotam-hr::auth.update-more-info', [
                 'title' => 'Thông tin cá nhân',
                 'msg' => 'Vui lòng cập nhật Nhóm sản phẩm để tiếp tục',
                 'reload' => true
-                ]);
+            ]);
+        } elseif (!(bool)$hr->zalo_account) {
+            return response()->view('thotam-hr::auth.update-more-info', [
+                'title' => 'Thông tin cá nhân',
+                'msg' => 'Vui lòng cập nhật Tài khoản Zalo để tiếp tục',
+                'reload' => true
+            ]);
         } else {
             return $next($request);
         }

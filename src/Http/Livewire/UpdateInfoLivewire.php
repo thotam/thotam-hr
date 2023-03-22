@@ -17,13 +17,14 @@ class UpdateInfoLivewire extends Component
     use LoginTrait;
 
     /**
-    * Các biến sử dụng trong Component
-    *
-    * @var mixed
-    */
+     * Các biến sử dụng trong Component
+     *
+     * @var mixed
+     */
     public $hr, $reload;
     public $icpc1hn_taikhoan, $icpc1hn_matkhau;
     public $nhom_sp_arrays = [], $nhom_san_phams;
+    public $zalo_phone;
 
     public $mail = [];
 
@@ -39,7 +40,8 @@ class UpdateInfoLivewire extends Component
      *
      * @var array
      */
-    protected function rules() {
+    protected function rules()
+    {
         return [
             'mail' => 'nullable|array',
             'mail.*' => 'nullable|email:rfc',
@@ -49,6 +51,11 @@ class UpdateInfoLivewire extends Component
             'icpc1hn_matkhau' => ($this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable") . "|string",
             'nhom_san_phams' => ($this->hr->is_kd_quanly || $this->hr->is_kd_thanhvien ? "required" : "nullable") . "|array",
             'nhom_san_phams.*' => ($this->hr->is_kd_quanly || $this->hr->is_kd_thanhvien ? "required" : "nullable") . "|exists:nhom_san_phams,id",
+            'zalo_phone' => [
+                'required',
+                'numeric',
+                'regex:/^(032|033|034|035|036|037|038|039|086|096|097|098|081|082|083|084|085|088|091|094|056|058|092|070|076|077|078|079|089|090|093|099|059|087)+([0-9]{7})$/'
+            ],
         ];
     }
 
@@ -66,6 +73,7 @@ class UpdateInfoLivewire extends Component
         'icpc1hn_matkhau' => 'mật khẩu sổ tay',
         'nhom_san_phams' => "nhóm sản phẩm",
         'nhom_san_phams.*' => "nhóm sản phẩm",
+        'zalo_phone' => "SĐT Zalo",
     ];
 
     /**
@@ -146,6 +154,11 @@ class UpdateInfoLivewire extends Component
             'icpc1hn_matkhau' => ($this->hr->is_mkt_quanly || $this->hr->is_mkt_thanhvien ? "required" : "nullable") . "|string",
             'nhom_san_phams' => ($this->hr->is_kd_quanly || $this->hr->is_kd_thanhvien ? "required" : "nullable") . "|array",
             'nhom_san_phams.*' => ($this->hr->is_kd_quanly || $this->hr->is_kd_thanhvien ? "required" : "nullable") . "|exists:nhom_san_phams,id",
+            'zalo_phone' => [
+                'required',
+                'numeric',
+                'regex:/^(032|033|034|035|036|037|038|039|086|096|097|098|081|082|083|084|085|088|091|094|056|058|092|070|076|077|078|079|089|090|093|099|059|087)+([0-9]{7})$/'
+            ],
         ]);
         $this->dispatchBrowserEvent('blockUI');
 
@@ -155,13 +168,13 @@ class UpdateInfoLivewire extends Component
             if ($response->status() == 200) {
                 $json_array = $response->json();
                 if ($json_array["ResCode"] != 0) {
-                    $this->addError('icpc1hn_taikhoan', $json_array["ResCode"] ." ". $json_array["ResMes"]);
+                    $this->addError('icpc1hn_taikhoan', $json_array["ResCode"] . " " . $json_array["ResMes"]);
                     $this->dispatchBrowserEvent('unblockUI');
                     return null;
                 }
             } else {
                 $this->dispatchBrowserEvent('unblockUI');
-                $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: '. $response->status() . ' ' .$response->getReasonPhrase()]);
+                $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: ' . $response->status() . ' ' . $response->getReasonPhrase()]);
                 return null;
             }
 
@@ -171,12 +184,12 @@ class UpdateInfoLivewire extends Component
                 $json_array = $gruops->json();
                 if ($json_array["ResCode"] != 0) {
                     $this->dispatchBrowserEvent('unblockUI');
-                    $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $json_array["ResCode"] ." ". $json_array["ResMes"]]);
+                    $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $json_array["ResCode"] . " " . $json_array["ResMes"]]);
                     return null;
                 }
             } else {
                 $this->dispatchBrowserEvent('unblockUI');
-                $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: '. $gruops->status() . ' ' .$gruops->getReasonPhrase()]);
+                $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: ' . $gruops->status() . ' ' . $gruops->getReasonPhrase()]);
                 return null;
             }
 
@@ -201,12 +214,12 @@ class UpdateInfoLivewire extends Component
                     $json_array = $addMKT->json();
                     if ($json_array["ResCode"] != 0) {
                         $this->dispatchBrowserEvent('unblockUI');
-                        $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $json_array["ResCode"] ." ". $json_array["ResMes"]]);
+                        $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $json_array["ResCode"] . " " . $json_array["ResMes"]]);
                         return null;
                     }
                 } else {
                     $this->dispatchBrowserEvent('unblockUI');
-                    $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: '. $addMKT->status() . ' ' .$addMKT->getReasonPhrase()]);
+                    $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: ' . $addMKT->status() . ' ' . $addMKT->getReasonPhrase()]);
                     return null;
                 }
             }
@@ -218,12 +231,12 @@ class UpdateInfoLivewire extends Component
                     $json_array = $removeTest->json();
                     if ($json_array["ResCode"] != 0) {
                         $this->dispatchBrowserEvent('unblockUI');
-                        $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $json_array["ResCode"] ." ". $json_array["ResMes"]]);
+                        $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => $json_array["ResCode"] . " " . $json_array["ResMes"]]);
                         return null;
                     }
                 } else {
                     $this->dispatchBrowserEvent('unblockUI');
-                    $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: '. $removeTest->status() . ' ' .$removeTest->getReasonPhrase()]);
+                    $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => 'Unexpected HTTP status: ' . $removeTest->status() . ' ' . $removeTest->getReasonPhrase()]);
                     return null;
                 }
             }
@@ -269,6 +282,16 @@ class UpdateInfoLivewire extends Component
                     $this->hr->icpc1hn_account()->save($icpc1hn_account);
                 }
             }
+
+            \Thotam\Cpc1hnZalo\Models\ZaloAccount::updateOrCreate(
+                [
+                    'hr_key' => $this->hr->key,
+                ],
+                [
+                    'phone' => $this->zalo_phone,
+                    'active' => true,
+                ]
+            );
         } catch (\Illuminate\Database\QueryException $e) {
             $this->dispatchBrowserEvent('unblockUI');
             $this->dispatchBrowserEvent('toastr', ['type' => 'warning', 'title' => "Thất bại", 'message' => implode(" - ", $e->errorInfo)]);
