@@ -77,7 +77,7 @@ class HrLivewire extends Component
     protected function rules()
     {
         return [
-            'key' => 'required|string|max:10|unique:Thotam\ThotamHr\Models\HR,key,' . $this->old_key,
+            'key' => 'required|string|max:20|unique:Thotam\ThotamHr\Models\HR,key,' . $this->old_key,
             'hoten' => 'required|string|max:255',
             'ten' => 'required|string|max:50',
             'ngaysinh' => 'nullable|date_format:d-m-Y',
@@ -231,7 +231,7 @@ class HrLivewire extends Component
 
         $this->dispatchBrowserEvent('unblockUI');
         $this->validate([
-            'key' => 'required|string|max:10|unique:Thotam\ThotamHr\Models\HR,key,' . $this->old_key,
+            'key' => 'required|string|max:20|unique:Thotam\ThotamHr\Models\HR,key,' . $this->old_key,
             'hoten' => 'required|string|max:255',
             'ten' => 'required|string|max:50',
             'ngaysinh' => 'nullable|date_format:d-m-Y',
