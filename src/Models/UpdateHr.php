@@ -13,8 +13,6 @@ class UpdateHr extends Model
     use SoftDeletes;
     use Userstamps;
 
-    protected $connection = 'mysql';
-
     /**
      * Disable Laravel's mass assignment protection
      *

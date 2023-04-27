@@ -42,8 +42,6 @@ class HR extends Model implements AuthorizableContract
     use \Thotam\Cpc1hnCheckCam\Traits\HrHasCheckCamTraits;
     use \Thotam\Cpc1hnZalo\Traits\HasZaloTraits;
 
-    protected $connection = 'mysql';
-
     /**
      * The attributes that are mass assignable.
      *
